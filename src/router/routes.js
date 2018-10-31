@@ -1,16 +1,34 @@
+// LOAD function
+function load (component, isLayout = false) {
+  console.log('what we load:', component, isLayout)
+  return isLayout ? () => import(`layouts/${component}.vue`) : () => import(`pages/${component}.vue`)
+}
 
 const routes = [
-  {
-    path: '/main',
-    component: () => import('layouts/main.vue'),
-    children: [
-      { path: '', component: () => import('pages/Index.vue') },
-      { path: 'sec', component: () => import('pages/Sec.vue') }
-    ]
-  },
+  // {
+  //   path: '/main',
+  //   component: load('main', true),
+  //   children: [
+  //     { path: '', component: () => import('pages/Index.vue') },
+  //     { path: 'sec', component: () => import('pages/Sec.vue') }
+  //   ]
+  // },
   {
     path: '/',
-    component: () => import('layouts/Home.vue')
+    name: '',
+    component: load('Main', true),
+    children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: load('Home')
+      },
+      {
+        path: 'articles',
+        name: 'articles',
+        component: load('Articles')
+      }
+    ]
   }
 ]
 
