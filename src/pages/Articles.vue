@@ -2,16 +2,22 @@
   <q-page padding>
     <!-- content -->
     This is the palce for articles
-  <article-list-item v-for='(article, idx) in articles' :key='idx' :article="article" />
+    <div class="row gutter-lg">
+      <article-list-item v-for='(article, idx) in articles' :key='idx' :article="article" />
+    </div>
   </q-page>
 </template>
 
 <script>
+import {
+  QPage
+} from 'quasar'
 import ArticleListItem from '../components/ArticleListItem'
 
 export default {
   name: 'Articles',
   components: {
+    QPage,
     ArticleListItem
   },
   data () {
