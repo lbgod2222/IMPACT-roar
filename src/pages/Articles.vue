@@ -3,7 +3,7 @@
     <!-- content -->
     This is the palce for articles
     <div class="row gutter-lg">
-      <article-list-item v-for='(article, idx) in articles' :key='idx' :article="article" />
+      <article-list-item v-for='(article, idx) in articles' :key='idx' :article="article" @open="toArticle(article._id)"/>
     </div>
   </q-page>
 </template>
@@ -58,6 +58,12 @@ export default {
           'title': 'The seventh article'
         }
       ]
+    }
+  },
+  methods: {
+    toArticle (id) {
+      console.log('jumped!')
+      this.$router.push('article')
     }
   }
 }

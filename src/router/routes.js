@@ -27,6 +27,11 @@ const routes = [
         path: 'articles',
         name: 'articles',
         component: load('Articles')
+      },
+      {
+        path: 'article',
+        name: 'article',
+        component: load('ArticleDetail')
       }
     ]
   }
