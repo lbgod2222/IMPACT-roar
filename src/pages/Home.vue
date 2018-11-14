@@ -81,7 +81,7 @@ export default {
 
 <style lang="stylus" scoped>
 #home-cursion
-  z-index: 999999
+  z-index: 999
   position: relative
   min-height: 100vh
   width: 100%

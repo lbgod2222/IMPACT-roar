@@ -19,6 +19,8 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <!-- Place for modal or living stuff -->
+    <login-modal />
   </q-layout>
 </template>
 
@@ -40,6 +42,7 @@ import {
   QScrollObservable
 } from 'quasar'
 import bgVideo from '../assets/bg.mp4'
+import LoginModal from '../components/LoginModal'
 
 export default {
   name: 'Home',
@@ -64,7 +67,8 @@ export default {
     QPageContainer,
     QPage,
     QSlideTransition,
-    QScrollObservable
+    QScrollObservable,
+    LoginModal
   },
   mounted () {
     this.$router.push('home')
