@@ -32,6 +32,11 @@ const routes = [
         path: 'article',
         name: 'article',
         component: load('ArticleDetail')
+      },
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: load('QuickDashboard')
       }
     ]
   }
