@@ -1,5 +1,5 @@
 <template>
-  <q-card class="lad-card" :color="boxColor[meta.themeColor].background">
+  <q-card class="lad-card q-mt-md" :color="boxColor[meta.themeColor].background">
     <div class="q-card-primary q-card-container row no-wrap justify-end">
       <!-- <div class="col column">
         <div class="q-card-title">
@@ -29,23 +29,22 @@
       </div>
     </div>
     <div class="q-card-primary q-card-container row no-wrap">
-      <q-input type="textarea" class="col-12 shadow-0" inverted="" float-label="Type what you want" :color="boxColor[meta.themeColor].background" hide-underline></q-input>
+      <q-input v-if="!editing" type="textarea" class="col-12 shadow-0" readonly inverted v-model="meta.title" float-label="Type what you want" @click="editContent" :color="boxColor[meta.themeColor].background" hide-underline></q-input>
+      <q-input v-else type="textarea" class="col-12 shadow-1" inverted float-label="Type what you want" v-model="content" @blur="sendContent" :color="boxColor[meta.themeColor].background" hide-underline></q-input>
     </div>
     <q-card-actions class="hover-appear">
       <q-btn-dropdown label="Operation" outline :color="boxColor[meta.themeColor].content">
-        <q-list dense class="lad-card">
-          <q-list-header>COLOR CHANGE</q-list-header>
-          <q-item v-for="(option, idx) in colorList" :key="idx" v-close-overlay>
-            <q-item-side>
-              <span :class="option.style"></span>
-            </q-item-side>
-            <span @click="changeTheme(option.value)">
-              {{option.title}}
-            </span>
-          </q-item>
-          <q-item-separator />
-          <q-list-header>COLOR CHANGE</q-list-header>
-        </q-list>
+        <div class="row">
+          <q-list highlight dense class="lad-card col-6">
+            <q-list-header>COLOR CHANGE</q-list-header>
+            <q-item @click.native="changeTheme(option.value)" v-for="(option, idx) in colorList" :key="idx" class="cursor-pointer" v-close-overlay>
+              <span :class="option.style" class="col-12"></span>
+            </q-item>
+          </q-list>
+          <q-list class="col-6">
+            <q-list-header>CARD OPS</q-list-header>
+          </q-list>
+        </div>
       </q-btn-dropdown>
     </q-card-actions>
   </q-card>
@@ -73,7 +72,7 @@ import {
 
 export default {
   name: 'LadBox',
-  props: ['meta', 'colorList', 'boxColor'],
+  props: ['meta', 'colorList', 'boxColor', 'line', 'idx'],
   components: {
     QCard,
     QCardTitle,
@@ -94,6 +93,8 @@ export default {
   },
   data () {
     return {
+      content: '',
+      editing: false
       // status
       // meta.pined: true,
       // meta.themeColor: 'BLACK'
@@ -102,13 +103,34 @@ export default {
   },
   methods: {
     changPin () {
-      // this.meta.pined = !this.meta.pined
-      this.$emit('changPin')
+      let pack = {
+        line: this.line,
+        idx: this.idx
+      }
+      this.$emit('changPin', pack)
     },
     changeTheme (color) {
       // this.meta.themeColor = color
-      console.log(color)
-      this.$emit('changeTheme', color)
+      let pack = {
+        color: color,
+        line: this.line,
+        idx: this.idx
+      }
+      this.$emit('changeTheme', pack)
+    },
+    sendContent () {
+      console.log('clicked twice')
+      this.editing = false
+      let pack = {
+        content: this.content,
+        line: this.line,
+        idx: this.idx
+      }
+      this.$emit('sendContent', pack)
+    },
+    editContent () {
+      this.content = this.meta.title
+      this.editing = true
     }
   },
   computed: {
@@ -129,12 +151,12 @@ export default {
 //     $appear = hidden
 
 .hover-appear
-  transition: all ease .5s
+  // transition: all ease .5s
   visibility hidden !important
 .color-select
   display inline-block
   height 30px
-  width 50px
+  width 100%
 
 .lad-card
   &:hover, &:focus
