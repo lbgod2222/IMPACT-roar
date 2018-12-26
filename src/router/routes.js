@@ -37,6 +37,11 @@ const routes = [
         path: 'dashboard',
         name: 'dashboard',
         component: load('QuickDashboard')
+      },
+      {
+        path: 'quicklad',
+        name: 'quicklad',
+        component: load('Quicklads')
       }
     ]
   }

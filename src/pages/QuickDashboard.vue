@@ -4,7 +4,7 @@
       <div class="column col-3">
         <draggable :list="colList_1" :options="groupOptions" @start="drag=true" @end="drag=false" :move="checkFix" class="leastSpaec">
           <!-- <div class="tempBox" v-for="(lad, idx) in colList_1" :key="idx">{{lad.title}}</div> -->
-          <lad-box v-for="(meta, idx) in colList_1" :meta="meta" :colorList="colorList" :boxColor="boxColor" @changPin="changPin" line="1" :idx="idx" @changeTheme="changeTheme" @sendContent="editContent" :key="colList_1 + idx"></lad-box>
+          <lad-box v-for="(meta, idx) in colList_1" :meta="meta" :colorList="colorList" :boxColor="boxColor" @changPin="changPin" @deleteLad="deleteLad" line="1" :idx="idx" @changeTheme="changeTheme" @sendContent="editContent" :key="colList_1 + idx"></lad-box>
         </draggable>
         <div class="add_btn round q-mt-md q-py-sm cursor-pointer text-center round-borders" @click="addColomn(1)">
           <q-icon name="add_box" size="38px" color="tertiary"></q-icon>
@@ -12,7 +12,7 @@
       </div>
       <div class="column col-3">
         <draggable :list="colList_2" :options="groupOptions" @start="drag=true" @end="drag=false" :move="checkFix" class="leastSpaec">
-          <lad-box v-for="(meta, idx) in colList_2" :meta="meta" :colorList="colorList" :boxColor="boxColor" @changPin="changPin" line="2" :idx="idx" @changeTheme="changeTheme" @sendContent="editContent" :key="colList_2 + idx"></lad-box>
+          <lad-box v-for="(meta, idx) in colList_2" :meta="meta" :colorList="colorList" :boxColor="boxColor" @changPin="changPin" @deleteLad="deleteLad" line="2" :idx="idx" @changeTheme="changeTheme" @sendContent="editContent" :key="colList_2 + idx"></lad-box>
           <!-- <div class="tempBox" v-for="(lad, idx) in colList_2" :key="idx">{{lad.title}}</div> -->
         </draggable>
         <div class="add_btn round q-mt-md q-py-sm cursor-pointer text-center round-borders" @click="addColomn(2)">
@@ -21,7 +21,7 @@
       </div>
       <div class="column col-3">
         <draggable :list="colList_3" :options="groupOptions" @start="drag=true" @end="drag=false" :move="checkFix" class="leastSpaec">
-          <lad-box v-for="(meta, idx) in colList_3" :meta="meta" :colorList="colorList" :boxColor="boxColor" @changPin="changPin" line="3" :idx="idx" @changeTheme="changeTheme" @sendContent="editContent" :key="colList_3 + idx"></lad-box>
+          <lad-box v-for="(meta, idx) in colList_3" :meta="meta" :colorList="colorList" :boxColor="boxColor" @changPin="changPin" @deleteLad="deleteLad" line="3" :idx="idx" @changeTheme="changeTheme" @sendContent="editContent" :key="colList_3 + idx"></lad-box>
           <!-- <div class="tempBox" v-for="(lad, idx) in colList_3" :key="idx">{{lad.title}}</div> -->
         </draggable>
         <div class="add_btn round q-mt-md q-py-sm cursor-pointer text-center round-borders" @click="addColomn(3)">
@@ -217,7 +217,7 @@ export default {
           break
       }
     },
-    removeColomn (obj) {
+    deleteLad (obj) {
       let { line, idx } = obj
       switch (line) {
         case '1':

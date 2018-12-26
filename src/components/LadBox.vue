@@ -41,8 +41,16 @@
               <span :class="option.style" class="col-12"></span>
             </q-item>
           </q-list>
-          <q-list class="col-6">
+          <q-list highlight class="col-6">
             <q-list-header>CARD OPS</q-list-header>
+            <q-item @click.native="deleteLad" class="cursor-pointer">
+              <q-item-main label="DELETE" />
+              <q-item-side right icon="delete" />
+            </q-item>
+            <q-item class="cursor-pointer">
+              <q-item-main label="CULTIVATED" />
+              <q-item-side right icon="spa" />
+            </q-item>
           </q-list>
         </div>
       </q-btn-dropdown>
@@ -131,6 +139,12 @@ export default {
     editContent () {
       this.content = this.meta.title
       this.editing = true
+    },
+    deleteLad () {
+      this.$emit('deleteLad', {
+        line: this.line,
+        idx: this.idx
+      })
     }
   },
   computed: {
