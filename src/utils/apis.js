@@ -1,6 +1,5 @@
 import axios from 'axios'
-import urls from '../constant/urls'
-import server from '../constant/server'
+import { urls, server } from '../utils/constant'
 
 // COMPILE FUNCTIONS
 const json2url = json => {
