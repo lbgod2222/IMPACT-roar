@@ -9,7 +9,8 @@ module.exports = function (ctx) {
       'draggable'
     ],
     css: [
-      'app.styl'
+      'app.styl',
+      'font-style.css'
     ],
     extras: [
       ctx.theme.mat ? 'roboto-font' : null,

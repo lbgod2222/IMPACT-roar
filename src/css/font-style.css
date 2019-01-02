@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'simplec';
+  src: url('../assets/fonts/RS_XiYuan.eot');
+  src: url('../assets/fonts/RS_XiYuan.eot?#iefix') format('embedded-opentype'),
+      url('../assets/fonts/RS_XiYuan.woff') format('woff'),
+      url('../assets/fonts/RS_XiYuan.ttf') format('truetype'),
+      url('../assets/fonts/RS_XiYuan.svg#RS_XiYuan') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'stag';
+  src: url('../assets/fonts/StagSans-Light.eot');
+  src: url('../assets/fonts/StagSans-Light.eot?#iefix') format('embedded-opentype'),
+    url('../assets/fonts/StagSans-Light.woff2') format('woff2'),
+    url('../assets/fonts/StagSans-Light.woff') format('woff'),
+    url('../assets/fonts/StagSans-Light.ttf') format('truetype'),
+    url('../assets/fonts/StagSans-Light.svg#StagSans-Light') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}

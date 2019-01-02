@@ -2,7 +2,7 @@
   <q-page class='row max-height' padding>
     <q-scroll-observable @scroll='scrollHandler' />
     <aside class='left-panel col-4 fixed text-left'>
-      <div class='article-title text-secondary uppercase col-12' :class="scrolled ? 'shrink' : null">
+      <div class='article-title text-secondary uppercase col-12 spec-font' :class="!largeGrid ? 'shrink' : null">
         What are
         <br />
         you
@@ -12,12 +12,12 @@
         for?
         <br />
       </div>
-      <div class='searchBar col-12 q-px-xs q-py-xs q-mt-xl1 mt-20' :class="scrolled ? 'shrink-search' : null">
+      <div class='searchBar col-12 q-px-xs q-py-xs q-mt-xl1 mt-20' :class="!largeGrid ? 'shrink-search' : null">
         <div>
           <q-search :hide-underline='!searchShowWrap' @focus='searchShowWrap=true' @blur='searchShowWrap=false'/>
         </div>
       </div>
-      <div class='col-12 q-px-xs q-py-xs q-mt-xl1 mt-20' :class="scrolled ? 'shrink-search' : null">
+      <div class='col-12 q-px-xs q-py-xs q-mt-xl1 mt-20' :class="!largeGrid ? 'shrink-search' : null">
         <div class='btn-group-wrap align-center'>
           <q-btn icon='mdi-grid-large' :class="largeGrid ? ['bg-faded', 'text-white'] : null" @click='largeGrid = true' no-ripple flat></q-btn>
           <q-btn icon='mdi-grid' :class="!largeGrid ? ['bg-faded', 'text-white'] : null" @click='largeGrid = false' no-ripple flat></q-btn>
@@ -26,9 +26,14 @@
     </aside>
     <div class='right-panel col-8 offset-3 test-border'>
       <!-- for dense use -->
-      <div class='col-12' v-for='(item, idx) in lads' :key='idx'>
-        <div class='col-10'>{{item.content}}</div>
-        <div class='col-2'></div>
+      <div class='col-12 row dense-box' v-for='(item, idx) in lads' :key='idx'>
+        <div class='col-10 dense-content'>{{item.content}}</div>
+        <div class='col-2 dense-detail column'>
+          <div class="spec-font">
+            {{item.creator ? item.creator.name : item.tempNick}}
+          </div>
+          <span class="dense-color col-12" :class="colorBox[item.color.toUpperCase()].style"></span>
+        </div>
       </div>
     </div>
   </q-page>
@@ -41,6 +46,7 @@ import {
   QScrollObservable,
   QSearch
 } from 'quasar'
+import { colorBox } from '../utils/constant'
 
 export default {
   name: 'QuickLad',
@@ -52,13 +58,14 @@ export default {
   },
   data () {
     return {
+      colorBox,
       scrolled: false,
       searchShowWrap: false,
       largeGrid: false,
       // temp data
       lads: [
         {
-          content: 'With those heart still beating \'s man, we have nothing to say',
+          content: 'With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say',
           color: 'black',
           createdTime: new Date() - 10000000,
           lastModified: new Date() - 9000000,
@@ -149,4 +156,18 @@ export default {
   // line-height 20px !important
 .searchWrapStyle
   border 1px solid red
+.dense-box
+  margin-bottom 5px
+  border 1px solid yellow
+  .dense-content
+    padding 5px
+  .dense-detail
+    text-align center
+    padding 5px
+  .dense-color
+    display inline-block
+    margin auto
+    width 60px
+    height 10px
+    border 1px solid red
 </style>

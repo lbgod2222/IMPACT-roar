@@ -2,7 +2,7 @@
   <q-page padding>
     <!-- head -->
     <header class="row">
-      <div class="article-title text-secondary uppercase offset-md-3">
+      <div class="article-title text-secondary uppercase offset-md-3 spec-font">
         {{article.title}}
       </div>
       <div class="article-subtitle text-neutral offset-md-3">
