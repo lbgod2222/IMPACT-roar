@@ -24,14 +24,19 @@
         </div>
       </div>
     </aside>
-    <div class='right-panel col-8 offset-3 test-border'>
+    <div class='right-panel col-8 offset-3'>
       <!-- for dense use -->
       <div class='col-12 row dense-box' v-for='(item, idx) in lads' :key='idx'>
-        <div class='col-10 dense-content'>{{item.content}}</div>
+        <div class='col-10 dense-content row items-center'>
+          <span class="">
+            {{item.content}}
+          </span>
+        </div>
         <div class='col-2 dense-detail column'>
-          <div class="spec-font">
+          <div class="spec-font text-weight-bold">
             {{item.creator ? item.creator.name : item.tempNick}}
           </div>
+          <div class="spec-font">{{purseTimestamp(item.lastModified)}}</div>
           <span class="dense-color col-12" :class="colorBox[item.color.toUpperCase()].style"></span>
         </div>
       </div>
@@ -47,6 +52,7 @@ import {
   QSearch
 } from 'quasar'
 import { colorBox } from '../utils/constant'
+import { purseTimestamp } from '../utils/util'
 
 export default {
   name: 'QuickLad',
@@ -65,7 +71,7 @@ export default {
       // temp data
       lads: [
         {
-          content: 'With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say',
+          content: 'With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to sayWith those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say',
           color: 'black',
           createdTime: new Date() - 10000000,
           lastModified: new Date() - 9000000,
@@ -115,12 +121,13 @@ export default {
           color: 'black',
           createdTime: new Date() - 10000000,
           lastModified: new Date() - 9000000,
-          tempNick: 'Stun'
+          tempNick: 'Stunisakindofdisasterasisaid'
         }
       ]
     }
   },
   methods: {
+    purseTimestamp,
     scrollHandler (scroll) {
       console.log(scroll)
       if (scroll.position > 300) {
@@ -157,17 +164,17 @@ export default {
 .searchWrapStyle
   border 1px solid red
 .dense-box
+  word-break break-all
   margin-bottom 5px
-  border 1px solid yellow
+  border-bottom 1px solid rgb(163,159,147)
   .dense-content
     padding 5px
   .dense-detail
-    text-align center
+    text-align left
     padding 5px
   .dense-color
     display inline-block
-    margin auto
+    // margin auto
     width 60px
     height 10px
-    border 1px solid red
 </style>
