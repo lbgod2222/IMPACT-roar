@@ -27,7 +27,7 @@
     <div class='right-panel col-8 offset-4'>
       <!-- for dense use -->
       <div v-if="!largeGrid">
-        <div class='col-12 row dense-box' v-for='(item, idx) in lads' :key='idx'>
+        <div class='col-12 row dense-box' v-for='(item, idx) in lads' :key='idx' @click="checkDetail(idx)">
           <div class='col-10 dense-content row items-center'>
             <span class="">
               {{item.content}}
@@ -40,6 +40,9 @@
             <div class="spec-font">{{purseTimestamp(item.lastModified)}}</div>
             <span class="dense-color col-12" :class="colorBox[item.color.toUpperCase()].style"></span>
           </div>
+        </div>
+        <div class="dense-pagi">
+          <q-pagination color="secondary" size="20px" direction-links />
         </div>
       </div>
       <!-- for detail use -->
@@ -62,6 +65,12 @@
           时六年九月十五日。 -->
         </div>
         <span class="singleqout-end">”</span>
+        <div class="separator"></div>
+        <div class="detail-action">
+          <q-btn class="spec-font text-weight-bold" no-ripple flat>采集</q-btn>
+          <q-btn class="spec-font text-weight-bold" no-ripple flat>上一个</q-btn>
+          <q-btn class="spec-font text-weight-bold" no-ripple flat>下一个</q-btn>
+        </div>
       </div>
     </div>
   </q-page>
@@ -72,7 +81,8 @@ import {
   QPage,
   QBtn,
   QScrollObservable,
-  QSearch
+  QSearch,
+  QPagination
 } from 'quasar'
 import { colorBox } from '../utils/constant'
 import { purseTimestamp } from '../utils/util'
@@ -83,7 +93,8 @@ export default {
     QPage,
     QBtn,
     QScrollObservable,
-    QSearch
+    QSearch,
+    QPagination
   },
   data () {
     return {
@@ -181,6 +192,10 @@ export default {
       } else {
         this.scrolled = false
       }
+    },
+    checkDetail (idx) {
+      this.singleLad = this.lads[idx]
+      this.largeGrid = true
     }
   },
   computed: {
@@ -213,6 +228,9 @@ export default {
   word-break break-all
   margin-bottom 5px
   border-bottom 1px solid rgb(163,159,147)
+  &:hover
+    background-color #A9B084
+    cursor pointer
   .dense-content
     padding 5px
   .dense-detail
