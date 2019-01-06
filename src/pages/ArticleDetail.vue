@@ -2,11 +2,11 @@
   <q-page padding>
     <!-- head -->
     <header class="row">
-      <div class="article-title text-secondary uppercase offset-md-3 spec-font">
+      <div class="article-title text-secondary uppercase offset-md-3">
         {{article.title}}
       </div>
       <div class="article-subtitle text-neutral offset-md-3">
-        LastModified: {{article.lastModified}}
+        LastModified: {{purseTimestamp(article.lastModified)}}
       </div>
     </header>
     <!-- aside -->
@@ -39,6 +39,22 @@
       <article class="col-md-8 col-sm-12 article-content">
         {{article.content}}
       </article>
+      <!-- comments area -->
+      <div class="comment col-md-8 col-sm-12 offset-md-3">
+        <div class="separator"></div>
+        <div class="comment-title spec-font text-weight-bold font-20">
+          全部评论
+        </div>
+        <div class="comment-body spec-font" v-for="(item, idx) in comments" :key="idx">
+          <span class="comment-title font-18 text-weight-bold">{{item.tempNick || item.creator.name}}</span>
+          <span class="comment-content spec-font">{{item.content}}</span>
+          <span v-if="item.replies.length" class="comment-reply font-12 text-weight-bold">展开回复</span>
+          <span class="float-right">{{purseTimestamp(item.createdTime)}}</span>
+        </div>
+        <div class="comment-action">
+          <q-pagination color="secondary" size="20px" direction-links :min="1" :max="10"/>
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
@@ -46,14 +62,19 @@
 <script>
 import {
   QPage,
-  QIcon
+  QIcon,
+  QBtn,
+  QPagination
 } from 'quasar'
+import { purseTimestamp } from '../utils/util'
 
 export default {
   name: 'ArticleDetail',
   components: {
     QPage,
-    QIcon
+    QBtn,
+    QIcon,
+    QPagination
   },
   data () {
     return {
@@ -80,8 +101,85 @@ export default {
         'title': '即使没有更多情况我也要进行一次中文测试',
         'content': '千里之行，始于足下 This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! ',
         '__v': 0
-      }
+      },
+      comments: [
+        {
+          replies: [
+            {
+              replies: [],
+              createdTime: '2018-11-07T09:18:51.319Z',
+              _id: '5be2ae0e789085140cde0c80',
+              creator: {
+                name: 'Danny',
+                email: 'DannyLuvJenny@google.com',
+                username: 'danny123',
+                age: 18,
+                hashed_password: 'f73dad875833944cdfe83378949bf32557de2cae',
+                salt: '762959350905',
+                authToken: '',
+                articls: [],
+                cultivated: [],
+                comments: [],
+                lads: [],
+                messages: [],
+                _id: '5be01f20eabfb92bc86f15fb',
+                __v: 0
+              },
+              content: 'Here  came the reply2',
+              __v: 0
+            }
+          ],
+          createdTime: '2018-11-07T09:07:01.186Z',
+          _id: '5be2ab98df2f5c47d4816015',
+          content: '久闻李老先生使得一手好剑，端的是两袖青蛇，剑势一往无前',
+          creator: {
+            name: 'Danny',
+            email: 'DannyLuvJenny@google.com',
+            username: 'danny123',
+            age: 18,
+            hashed_password: 'f73dad875833944cdfe83378949bf32557de2cae',
+            salt: '762959350905',
+            authToken: '',
+            articls: [],
+            cultivated: [],
+            comments: [],
+            lads: [],
+            messages: [],
+            _id: '5be01f20eabfb92bc86f15fb',
+            __v: 0
+          },
+          aid: '5be1472eb833af406c240212',
+          __v: 0
+        },
+        {
+          replies: [],
+          createdTime: '2018-12-27T06:40:57.367Z',
+          _id: '5c2477ce40055645bc81c8d3',
+          content: '这条消息我想要回复',
+          creator: {
+            name: 'Danny',
+            email: 'DannyLuvJenny@google.com',
+            username: 'danny123',
+            age: 18,
+            hashed_password: 'f73dad875833944cdfe83378949bf32557de2cae',
+            salt: '762959350905',
+            authToken: '',
+            articls: [],
+            cultivated: [],
+            comments: [],
+            lads: [],
+            messages: [],
+            _id: '5be01f20eabfb92bc86f15fb',
+            __v: 0
+          },
+          aid: '5be1472eb833af406c240212',
+          __v: 0
+        }
+      ]
     }
+  },
+  methods: {
+    purseTimestamp
   }
 }
 </script>
@@ -123,4 +221,16 @@ export default {
   // border 2px solid $info
   :first-child
     font-weight 600
+.comment
+  .comment-body
+    margin-top 20px
+  .comment-content
+    display block
+    margin-top 10px
+  .comment-reply
+    display inline-block
+    margin-top 15px
+    cursor pointer
+  .comment-action
+    margin-top 40px
 </style>
