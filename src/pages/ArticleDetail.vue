@@ -48,8 +48,18 @@
         <div class="comment-body spec-font" v-for="(item, idx) in comments" :key="idx">
           <span class="comment-title font-18 text-weight-bold">{{item.tempNick || item.creator.name}}</span>
           <span class="comment-content spec-font">{{item.content}}</span>
-          <span v-if="item.replies.length" class="comment-reply font-12 text-weight-bold">展开回复</span>
+          <span v-if="item.replies.length && replyAppeared !== idx" @click="showReply(idx)" class="comment-reply font-12 text-weight-bold">展开回复</span>
+          <span v-if="item.replies.length && replyAppeared === idx" @click="hideReply(idx)" class="comment-reply font-12 text-weight-bold">收起回复</span>
           <span class="float-right">{{purseTimestamp(item.createdTime)}}</span>
+          <q-slide-transition>
+            <div class="reply-content" v-show="replyAppeared === idx">
+              <div class="reply-body" v-for="(item, idx) in item.replies" :key="idx">
+                <span class="comment-title font-18 text-weight-bold">{{item.tempNick || item.creator.name}}</span>
+                <span class="comment-content spec-font">{{item.content}}</span>
+                <span class="float-right">{{purseTimestamp(item.createdTime)}}</span>
+              </div>
+            </div>
+          </q-slide-transition>
         </div>
         <div class="comment-action">
           <q-pagination color="secondary" size="20px" direction-links :min="1" :max="10"/>
@@ -64,7 +74,8 @@ import {
   QPage,
   QIcon,
   QBtn,
-  QPagination
+  QPagination,
+  QSlideTransition
 } from 'quasar'
 import { purseTimestamp } from '../utils/util'
 
@@ -74,7 +85,8 @@ export default {
     QPage,
     QBtn,
     QIcon,
-    QPagination
+    QPagination,
+    QSlideTransition
   },
   data () {
     return {
@@ -175,11 +187,18 @@ export default {
           aid: '5be1472eb833af406c240212',
           __v: 0
         }
-      ]
+      ],
+      replyAppeared: -1
     }
   },
   methods: {
-    purseTimestamp
+    purseTimestamp,
+    showReply (idx) {
+      this.replyAppeared = idx
+    },
+    hideReply () {
+      this.replyAppeared = -1
+    }
   }
 }
 </script>
@@ -224,6 +243,10 @@ export default {
 .comment
   .comment-body
     margin-top 20px
+    .reply-content
+      padding-left 30px
+      .reply-body
+        padding 20px
   .comment-content
     display block
     margin-top 10px
