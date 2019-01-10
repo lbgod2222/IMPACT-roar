@@ -3,48 +3,28 @@
     <!-- q-card-replacement -->
     <div class="shodow-1 container">
       <div class="card-header row no-wrap">
-        <div class="col column">
-          <div class="font-title cursor-pointer" @click="open">
+        <div class="col">
+          <div class="font-title cursor-pointer uppercase" @click="open">
             {{article.title}}
           </div>
-          <div class="font-subtitle">
-            <div class="row justify-between">
-              <span>
-                {{article.meta.votes}}
-                persons voted
+          <div class="font-subtitle spec-font">
+            <div class="row">
+              <span class="list-author col-4">
+                By: {{article.author.name}}
               </span>
-              <span>
-                <q-chip dense v-for="(tag, idx) in article.meta.tags" :key="idx">
+              <span class="list-tag col-8 text-right">
+                <span class="card-tag" v-for="(tag, idx) in article.meta.tags" :key="idx">
                   {{tag}}
-                </q-chip>
+                </span>
               </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="card-main">
-        LastModi:{{article.lastModified}}
+      <div class="list-time spec-font">
+        {{purseTimestamp(article.lastModified)}}
       </div>
     </div>
-    <!-- <q-card class="shadow-1">
-      <q-card-title class="font-title">
-        {{article.title}}
-        <div slot="subtitle" class="row justify-between">
-          <div inline>
-            {{article.meta.votes}}
-            persons voted
-          </div>
-          <div inline>
-            <q-chip dense v-for="(tag, idx) in article.meta.tags" :key="idx">
-              {{tag}}
-            </q-chip>
-          </div>
-        </div>
-      </q-card-title>
-      <q-card-main>
-        LastModi:{{article.lastModified}}
-      </q-card-main>
-    </q-card> -->
   </div>
 </template>
 
@@ -55,6 +35,7 @@ import {
   QCardMain,
   QChip
 } from 'quasar'
+import { purseTimestamp } from '../utils/util'
 
 export default {
   name: 'ArticleListItem',
@@ -69,6 +50,7 @@ export default {
     return {}
   },
   methods: {
+    purseTimestamp,
     open () {
       this.$emit('open', this.article._id)
     }
@@ -77,9 +59,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import '~variables'
 .container
-  border 1px solid red
+  // border 1px solid red
   border-radius 3px
   .card-header, .card-main
-    padding 16px
+    padding 16px 16px 0 16px
+
+  .font-title
+    display inline-block
+  .font-subtitle
+    .card-tag
+      padding 1px 3px
+      color black
+      font-size 12px
+      border 1px solid $secondary
+      background-color transparent
+      &:nth-child(n+2)
+        margin-left 5px
+      &:hover
+        color $negative
+        border 1px solid $negative
+        cursor pointer
+        transition: all 0.4s ease
+    .list-author
+      margin 5px 0
+  .list-time
+    padding-left 16px
 </style>

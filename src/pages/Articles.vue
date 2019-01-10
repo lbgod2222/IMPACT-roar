@@ -1,9 +1,8 @@
 <template>
   <q-page padding>
     <!-- content -->
-    This is the palce for articles
-    <div class="row gutter-lg">
-      <article-list-item v-for='(article, idx) in articles' :key='idx' :article="article" @open="toArticle(article._id)"/>
+    <div class="row">
+      <article-list-item class="col-12" v-for="(article, idx) in articles" :key=idx :article="article" @open="toArticle(article._id)"/>
     </div>
   </q-page>
 </template>
@@ -24,45 +23,58 @@ export default {
     return {
       articles: [
         {
-          'meta': {
-            'tags': [],
-            'votes': 0,
-            'cultivated': 0
+          meta: {
+            tags: ['Rescure', 'helpAlive'],
+            votes: 0,
+            cultivated: 0
           },
-          'lastModified': '2018-08-28T01:53:42.642Z',
-          '_id': '5b84ab5d92895d4e94b9713e',
-          'title': 'Test of populate'
+          author: {
+            name: 'Danny', // 也许只留一个名字就好了//id？
+            username: 'danny123',
+            _id: '5be01f20eabfb92bc86f15fb'
+          },
+          lastModified: '2018-08-28T01:53:42.642Z',
+          _id: '5b84ab5d92895d4e94b9713e',
+          title: '看待新奇事物的新奇本领'
         },
         {
-          'meta': {
-            'tags': [
+          meta: {
+            tags: [
               'well'
             ],
-            'votes': 0,
-            'cultivated': 0
+            votes: 0,
+            cultivated: 0
           },
-          'lastModified': '2018-08-25T16:30:46.166Z',
-          '_id': '5b81843ac0357512107f3629',
-          'title': 'The seventh article'
+          author: {
+            name: 'Danny', // 也许只留一个名字就好了//id？
+            _id: '5be01f20eabfb92bc86f15fb'
+          },
+          lastModified: '2018-08-25T16:30:46.166Z',
+          _id: '5b81843ac0357512107f3629',
+          title: 'The seventh article'
         },
         {
-          'meta': {
-            'tags': [
+          meta: {
+            tags: [
               'hush3'
             ],
-            'votes': 0,
-            'cultivated': 0
+            votes: 0,
+            cultivated: 0
           },
-          'lastModified': '2018-08-22T10:35:13.164Z',
-          '_id': '5b7d3c8a228b532db0c07836',
-          'title': 'The seventh article'
+          author: {
+            name: 'Danny', // 也许只留一个名字就好了//id？
+            _id: '5be01f20eabfb92bc86f15fb'
+          },
+          lastModified: '2018-08-22T10:35:13.164Z',
+          _id: '5b7d3c8a228b532db0c07836',
+          title: 'The seventh article'
         }
       ]
     }
   },
   methods: {
     toArticle (id) {
-      console.log('jumped!')
+      console.log('jumped')
       this.$router.push('article')
     }
   }
@@ -70,4 +82,5 @@ export default {
 </script>
 
 <style>
+
 </style>

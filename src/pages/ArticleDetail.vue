@@ -5,7 +5,7 @@
       <div class="article-title text-secondary uppercase offset-md-3">
         {{article.title}}
       </div>
-      <div class="article-subtitle text-neutral offset-md-3">
+      <div class="article-subtitle text-neutral offset-md-3 spec-font">
         LastModified: {{purseTimestamp(article.lastModified)}}
       </div>
     </header>
