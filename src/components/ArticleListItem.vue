@@ -63,16 +63,18 @@ export default {
 .container
   // border 1px solid red
   border-radius 3px
+  margin-bottom 18px
   .card-header, .card-main
-    padding 16px 16px 0 16px
+    padding 0 16px 0 16px
 
   .font-title
     display inline-block
+    color $secondary
   .font-subtitle
     .card-tag
       padding 1px 3px
       color black
-      font-size 12px
+      font-size 14px
       border 1px solid $secondary
       background-color transparent
       &:nth-child(n+2)
@@ -84,6 +86,7 @@ export default {
         transition: all 0.4s ease
     .list-author
       margin 5px 0
+      font-weight 700
   .list-time
     padding-left 16px
 </style>

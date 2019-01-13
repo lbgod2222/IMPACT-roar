@@ -1,15 +1,22 @@
 <template>
   <q-page padding>
-    <!-- content -->
     <div class="row">
-      <article-list-item class="col-12" v-for="(article, idx) in articles" :key=idx :article="article" @open="toArticle(article._id)"/>
+      <div v-show="type!=='all'" class="col-3 filter-side">
+        <span class="filter-title spec-font text-weight-bold">{{filterTitle}}:</span>
+        <span class="filter-params spec-font text-weight-bold">Danny</span>
+      </div>
+      <div class="max-1200 self-center" :class="{'col-12': type === 'all'}">
+        <article-list-item v-for="(article, idx) in articles" :key='idx' :article="article" @open="toArticle(article._id)"/>
+          <q-pagination color="secondary" size="20px" direction-links />
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
 import {
-  QPage
+  QPage,
+  QPagination
 } from 'quasar'
 import ArticleListItem from '../components/ArticleListItem'
 
@@ -17,14 +24,16 @@ export default {
   name: 'Articles',
   components: {
     QPage,
-    ArticleListItem
+    ArticleListItem,
+    QPagination
   },
   data () {
     return {
+      type: 'user',
       articles: [
         {
           meta: {
-            tags: ['Rescure', 'helpAlive'],
+            tags: ['Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive'],
             votes: 0,
             cultivated: 0
           },
@@ -72,15 +81,42 @@ export default {
       ]
     }
   },
+  beforeMount () {
+    if (this.$route.meta && this.$route.meta.type) {
+      this.type = this.$route.meta.type
+      this.routeContent = this.$route.meta.id || this.$route.meta.tag
+    }
+  },
   methods: {
     toArticle (id) {
       console.log('jumped')
       this.$router.push('article')
     }
+    // get articles funcs
+  },
+  computed: {
+    filterTitle () {
+      switch (this.type) {
+        case 'all':
+          return ''
+        case 'user':
+          return '撰写人'
+        case 'tag':
+          return '标签'
+      }
+    }
   }
 }
 </script>
 
-<style>
-
+<style lang="stylus" scoped>
+@import '~variables'
+@import '../css/app.styl'
+.filter-side
+  .filter-title
+    font-size: times($base-font, 2.5)
+  .filter-params
+    display block
+    padding 20px 0
+    font-size: times($base-font, 2.0)
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="max-1200">
     <!-- head -->
     <header class="row">
       <div class="article-title text-secondary uppercase offset-md-3">
