@@ -39,6 +39,11 @@ const routes = [
         component: load('QuickDashboard')
       },
       {
+        path: 'personal',
+        name: 'personal',
+        component: load('Personal')
+      },
+      {
         path: 'quicklad',
         name: 'quicklad',
         component: load('Quicklads')

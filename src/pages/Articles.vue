@@ -1,7 +1,7 @@
 <template>
-  <q-page padding>
+  <q-page padding class="min-1">
     <div class="row">
-      <div v-show="type!=='all'" class="col-3 filter-side">
+      <div v-show="type!=='all'" class="col-md-3 col-xs-12 filter-side">
         <span class="filter-title spec-font text-weight-bold">{{filterTitle}}:</span>
         <span class="filter-params spec-font text-weight-bold">Danny</span>
       </div>
@@ -113,10 +113,11 @@ export default {
 @import '~variables'
 @import '../css/app.styl'
 .filter-side
+  margin-bottom 20px
   .filter-title
     font-size: times($base-font, 2.5)
   .filter-params
     display block
-    padding 20px 0
+    padding 15px 0
     font-size: times($base-font, 2.0)
 </style>
