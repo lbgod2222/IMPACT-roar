@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="min-1">
+  <q-page padding class="max-1200">
     <div class="row">
       <div v-show="type!=='all'" class="col-md-3 col-xs-12 filter-side">
         <span class="filter-title spec-font text-weight-bold">{{filterTitle}}:</span>
@@ -112,6 +112,7 @@ export default {
 <style lang="stylus" scoped>
 @import '~variables'
 @import '../css/app.styl'
+
 .filter-side
   margin-bottom 20px
   .filter-title
