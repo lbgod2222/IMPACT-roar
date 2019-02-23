@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="max-1200">
+  <q-page padding class="max-1200 page-commen">
     <div class="row">
       <div v-show="type!=='all'" class="col-md-3 col-xs-12 filter-side">
         <span class="filter-title spec-font text-weight-bold">{{filterTitle}}:</span>
@@ -29,7 +29,7 @@ export default {
   },
   data () {
     return {
-      type: 'user',
+      type: 'all',
       articles: [
         {
           meta: {

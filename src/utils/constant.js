@@ -75,8 +75,13 @@ const colorBox = {
   }
 }
 
+const forbiddenPath = [
+  'home'
+]
+
 export {
   urls,
   colorBox,
-  server
+  server,
+  forbiddenPath
 }

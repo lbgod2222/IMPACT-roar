@@ -16,6 +16,8 @@
         </div>
       </div>
     </div> -->
+    <!-- Commen widget -->
+    <navigator />
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -43,6 +45,7 @@ import {
 } from 'quasar'
 import bgVideo from '../assets/bg.mp4'
 import LoginModal from '../components/LoginModal'
+import Navigator from '../components/Navigator'
 
 export default {
   name: 'Home',
@@ -68,7 +71,8 @@ export default {
     QPage,
     QSlideTransition,
     QScrollObservable,
-    LoginModal
+    LoginModal,
+    Navigator
   },
   mounted () {
     this.$router.push('home')
