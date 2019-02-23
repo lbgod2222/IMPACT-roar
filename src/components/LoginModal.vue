@@ -6,7 +6,7 @@
         <br />
         NEVER
         <br />
-        STOP
+        DIE
         <transition-group
           enter-active-class="animated fadeIn"
           leave-active-class="animated fadeOut"
@@ -87,7 +87,7 @@ export default {
     return {
       // 0 for normal, 1 for sign up, 2 for fogot
       flag: 0,
-      show: false,
+      show: true,
       loadBtn: false,
       username: '',
       password: '',

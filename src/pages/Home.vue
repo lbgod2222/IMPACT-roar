@@ -5,7 +5,7 @@
       <!-- <q-slide-transition :duration="1000"> -->
       <div id="home-cursion" ref="cursion" class="animate-fade shadow-2 bg-positive" v-show="visible">
         <video class="bg-video" :src="bgVideo" playsinline autoplay muted loop></video>
-        <h1 class="text-grey">Idea is not Snakes</h1>
+        <h1 class="text-grey"></h1>
       </div>
       <!-- </q-slide-transition> -->
       <div id="footer-bar">

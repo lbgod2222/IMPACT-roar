@@ -9,7 +9,7 @@
           Subtitle
         </div>
       </div> -->
-      <div class="col-auto self-center q-card-title-extra hover-appear drag-area">
+      <div class="col-auto q-card-title-extra hover-appear drag-area">
         <q-icon :name="meta.pined ? 'mdi-pin' : 'mdi-pin-off'" class="q-ml-xs" :color="boxColor[meta.themeColor].content" @click.native="changPin"></q-icon>
         <q-icon name="more_vert" :color="boxColor[meta.themeColor].content" class="q-ml-xs">
           <q-popover>
