@@ -47,6 +47,11 @@ const routes = [
         path: 'quicklad',
         name: 'quicklad',
         component: load('Quicklads')
+      },
+      {
+        path: 'writter',
+        name: 'writter',
+        component: load('Writter')
       }
     ]
   }

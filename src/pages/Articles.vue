@@ -10,13 +10,23 @@
           <q-pagination color="secondary" size="20px" direction-links />
       </div>
     </div>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn round size="lg" color="primary" icon="add">
+        <q-tooltip :offset="[0, 5]">
+          发布一篇文章
+        </q-tooltip>
+      </q-btn>
+    </q-page-sticky>
   </q-page>
 </template>
 
 <script>
 import {
   QPage,
-  QPagination
+  QPagination,
+  QPageSticky,
+  QBtn,
+  QTooltip
 } from 'quasar'
 import ArticleListItem from '../components/ArticleListItem'
 
@@ -25,7 +35,10 @@ export default {
   components: {
     QPage,
     ArticleListItem,
-    QPagination
+    QPagination,
+    QPageSticky,
+    QBtn,
+    QTooltip
   },
   data () {
     return {

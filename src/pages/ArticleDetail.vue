@@ -36,9 +36,9 @@
         </div>
       </aside>
       <!-- article -->
-      <article class="col-md-8 col-sm-12 article-content">
+      <pre class="col-md-8 col-sm-12 article-content">
         {{article.content}}
-      </article>
+      </pre>
       <!-- comments area -->
       <div class="comment col-md-8 col-sm-12 offset-md-3">
         <div class="separator"></div>
@@ -111,7 +111,7 @@ export default {
         'comments': [],
         '_id': '5b787ff631e1a940d4732357',
         'title': '即使没有更多情况我也要进行一次中文测试',
-        'content': '千里之行，始于足下 This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! ',
+        'content': `千里之行，始于足下 This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! `,
         '__v': 0
       },
       comments: [
