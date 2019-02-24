@@ -6,17 +6,17 @@
         开启/关闭
       </q-tooltip>
     </q-icon>
-    <q-icon v-show="emit" name="mdi-book-open" size="large" class="ico cursor-pointer" @click.native="emit = !emit">
+    <q-icon v-show="emit" name="mdi-book-open" size="large" class="ico cursor-pointer" @click.native="linkTo('articles')">
       <q-tooltip :offset='[0,5]'>
         文章
       </q-tooltip>
     </q-icon>
-    <q-icon v-show="emit" name="mdi-account-box" size="large" class="ico cursor-pointer" @click.native="emit = !emit">
+    <q-icon v-show="emit" name="mdi-account-box" size="large" class="ico cursor-pointer" @click.native="linkTo('personal')">
       <q-tooltip :offset='[0,5]'>
         用户
       </q-tooltip>
     </q-icon>
-    <q-icon v-show="emit" name="mdi-view-dashboard" size="large" class="ico cursor-pointer" @click.native="emit = !emit">
+    <q-icon v-show="emit" name="mdi-view-dashboard" size="large" class="ico cursor-pointer" @click.native="linkTo('dashboard')">
       <q-tooltip :offset='[0,5]'>
         Dashboard
       </q-tooltip>
@@ -62,6 +62,11 @@ export default {
     ))
     if (findIndex >= 0) {
       this.appearence = false
+    }
+  },
+  methods: {
+    linkTo (path) {
+      this.$router.push(path)
     }
   }
 }
