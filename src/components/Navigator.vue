@@ -39,6 +39,9 @@ import {
 import {
   forbiddenPath
 } from '../utils/constant'
+import {
+  composeDialog
+} from '../utils/util'
 
 export default {
   name: 'Navigator',
@@ -65,7 +68,13 @@ export default {
     }
   },
   methods: {
-    linkTo (path) {
+    composeDialog,
+    async linkTo (path) {
+      await composeDialog({
+        title: 'jumpFunc',
+        message: 'This is the jump func, i just wanna warn u there',
+        isAlert: true
+      })
       this.$router.push(path)
     }
   }
