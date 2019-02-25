@@ -13,8 +13,8 @@ const json2url = json => {
 }
 
 const fetch = (url, data, method, postHeaders) => {
-  for (const i in data) {
-    if (data.indexOf(':' + i) > -1) {
+  for (let i in data) {
+    if (url.indexOf(':' + i) > -1) {
       // const element = object[i];
       url = url.replace(':' + i, data[i])
       delete data[i]

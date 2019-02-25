@@ -16,14 +16,14 @@
           <!-- NORMAL -->
           <div class="q-mt-lg" v-show="flag === 0" key="form-0">
             <q-field>
-              <q-input placeholder="USERNAME" class="text-center"/>
+              <q-input placeholder="USERNAME" class="text-center" v-model="loginState.username"/>
             </q-field>
             <q-field class="q-mt-sm">
-              <q-input type="password" placeholder="PASSWORD"/>
+              <q-input type="password" placeholder="PASSWORD" v-model="loginState.password"/>
             </q-field>
           </div>
-          <q-btn v-show="flag === 0" :loading="loadBtn" class="full-width q-mt-lg" color="secondary" key="btn-0">
-            LOGIN
+          <q-btn v-show="flag === 0" :loading="loadBtn" class="full-width q-mt-lg" color="secondary" key="btn-0" @click="loginFuction">
+            登录
           </q-btn>
           <!-- SIGN UP -->
           <div class="q-mt-lg" v-show="flag === 1" key="form-1">
@@ -41,7 +41,7 @@
                 <q-input type="email" v-model="email" placeholder="EMAIL"/>
               </q-field>
               <div class="send-btn q-btn inline relative-position q-btn-item non-selectable q-btn-rectangle q-btn-outline q-focusable q-hoverable q-mt-sm">
-                SEND
+                发送
               </div>
             </div>
             <q-field class="q-mt-sm">
@@ -49,7 +49,7 @@
             </q-field>
           </div>
           <q-btn v-show="flag === 1" :loading="loadBtn" class="full-width q-mt-lg" color="secondary" key="btn-1">
-            REGIST
+            注册
           </q-btn>
           <!-- FORGOT -->
         </transition-group>
@@ -57,8 +57,8 @@
       <div slot="footer">
         <div class="row justify-between login-tip">
           <!-- <a @click="change(0)">Forgot?</a> -->
-          <a v-if="flag === 0" @click="change(1)">Sign up</a>
-          <a v-else @click="change(0)">login</a>
+          <a v-if="flag === 0" @click="change(1)">注册</a>
+          <a v-else @click="change(0)">登录</a>
         </div>
       </div>
     </q-modal-layout>
@@ -66,6 +66,10 @@
 </template>
 
 <script>
+import {
+  // mapMutations,
+  mapActions
+} from 'vuex'
 import {
   QModal,
   QModalLayout,
@@ -94,6 +98,11 @@ export default {
       password2: '',
       email: '',
       valid: '',
+      // state part
+      loginState: {
+        username: '',
+        password: ''
+      },
       confirmBtn: [
         {
           icon: 'arrow_forward',
@@ -106,11 +115,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['login', 'createUser']),
     change (num) {
       this.flag = -1
       setTimeout(() => {
         this.flag = num
       }, 1000)
+    },
+    async loginFuction () {
+      let obj = {
+        username: this.loginState.username,
+        password: this.loginState.password
+      }
+      let result = await this.login(obj)
+      console.log('backend reback:', result)
     }
   },
   computed: {
