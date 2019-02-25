@@ -46,6 +46,12 @@ import {
 import bgVideo from '../assets/bg.mp4'
 import LoginModal from '../components/LoginModal'
 import Navigator from '../components/Navigator'
+import {
+  mapMutations,
+  mapActions,
+  mapGetters
+} from 'vuex'
+import { getCache } from '../utils/util'
 
 export default {
   name: 'Home',
@@ -54,7 +60,8 @@ export default {
       leftDrawer: true,
       visible: true,
       bgVideo,
-      isLoginShow: false
+      isLoginShow: false,
+      intervalNum: -1
     }
   },
   components: {
@@ -79,10 +86,23 @@ export default {
     // refly the  login bus
     this.$root.$on('callLoginModal', this.callLoginModal)
   },
+  beforeDestroy () {
+    // memory release
+    clearInterval(this.intervalNum)
+    this.$root.$off('callLoginModal')
+  },
   mounted () {
     this.$router.push('home')
+    this.intervalNum = setInterval(() => {
+      this.getUserInfoFunc()
+    }, 10000)
+  },
+  computed: {
+    ...mapGetters(['IS_LOGIN'])
   },
   methods: {
+    ...mapActions(['getUserInfo']),
+    ...mapMutations(['setLoginState', 'envalUserInfo']),
     scrollHandler (scroll) {
       // console.log(scroll)
       if (scroll.direction === 'down' && scroll.height !== 0) {
@@ -93,7 +113,29 @@ export default {
     },
     callLoginModal () {
       this.isLoginShow = true
+    },
+    async getUserInfoFunc () {
+      console.log('in the func')
+      let uid = getCache('uid')
+      if (uid && uid.length) {
+        let result = await this.getUserInfo(uid)
+        if (result && result.data.success) {
+          let data = result.data.data
+          console.log('get info:', result)
+          this.envalUserInfo(data)
+        }
+      } else {
+        return null
+      }
     }
+  },
+  watch: {
+    // IS_LOGIN (val) {
+    //   if (val) {
+    //     console.log('val is:', val)
+    //     this.getUserInfo()
+    //   }
+    // }
   }
 }
 </script>

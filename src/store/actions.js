@@ -4,7 +4,7 @@ export default {
   getUserInfo: ({
     commit
   }, uid) => {
-    return api.getUserInfo({
+    return api.userInfo({
       uid
     })
   },

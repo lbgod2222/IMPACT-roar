@@ -1,5 +1,5 @@
 // THIS JUST FOR THE UPCOMING MUTISERVER MIND
-const server = 'https://localhost:3007'
+const server = 'http://127.0.0.1:3007'
 
 const urls = {
   // USER

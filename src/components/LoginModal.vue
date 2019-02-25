@@ -67,9 +67,10 @@
 
 <script>
 import {
-  // mapMutations,
+  mapMutations,
   mapActions
 } from 'vuex'
+import { setCache } from '../utils/util'
 import {
   QModal,
   QModalLayout,
@@ -115,6 +116,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setLoginState']),
     ...mapActions(['login', 'createUser']),
     change (num) {
       this.flag = -1
@@ -129,6 +131,12 @@ export default {
       }
       let result = await this.login(obj)
       console.log('backend reback:', result)
+      let data = result.data.data
+      if (result && result.data.success) {
+        setCache('token', data.message)
+        setCache('uid', data._id)
+        this.setLoginState(true)
+      }
     }
   },
   computed: {

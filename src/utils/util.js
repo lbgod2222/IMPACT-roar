@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { Dialog } from 'quasar'
+import { Dialog, SessionStorage } from 'quasar'
 
 const purseTimestamp = function (t) {
   return moment(t).format('YYYY/MM/DD')
@@ -26,7 +26,22 @@ const composeDialog = async function (cfg, cb = () => {}, cbCancel = () => {}, t
     })
 }
 
+// cache actions
+const setCache = (key, value) => {
+  console.log(SessionStorage)
+  return SessionStorage.set(key, value)
+}
+const getCache = key => {
+  return SessionStorage.get.item(key)
+}
+const removeCache = key => {
+  return SessionStorage.remove(key)
+}
+
 export {
   purseTimestamp,
-  composeDialog
+  composeDialog,
+  setCache,
+  getCache,
+  removeCache
 }
