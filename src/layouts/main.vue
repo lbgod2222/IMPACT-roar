@@ -22,7 +22,7 @@
       <router-view />
     </q-page-container>
     <!-- Place for modal or living stuff -->
-    <login-modal />
+    <login-modal :show="isLoginShow" />
   </q-layout>
 </template>
 
@@ -53,7 +53,8 @@ export default {
     return {
       leftDrawer: true,
       visible: true,
-      bgVideo
+      bgVideo,
+      isLoginShow: false
     }
   },
   components: {
@@ -74,6 +75,10 @@ export default {
     LoginModal,
     Navigator
   },
+  created () {
+    // refly the  login bus
+    this.$root.$on('callLoginModal', this.callLoginModal)
+  },
   mounted () {
     this.$router.push('home')
   },
@@ -85,6 +90,9 @@ export default {
         console.log(this.$refs.outer.scrollHeight)
         this.$refs.outer.scrollTop = this.$refs.outer.scrollHeight
       }
+    },
+    callLoginModal () {
+      this.isLoginShow = true
     }
   }
 }

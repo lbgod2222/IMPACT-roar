@@ -76,6 +76,7 @@ import {
 
 export default {
   name: 'LoginModal',
+  props: ['show'],
   components: {
     QModal,
     QModalLayout,
@@ -87,7 +88,6 @@ export default {
     return {
       // 0 for normal, 1 for sign up, 2 for fogot
       flag: 0,
-      show: true,
       loadBtn: false,
       username: '',
       password: '',

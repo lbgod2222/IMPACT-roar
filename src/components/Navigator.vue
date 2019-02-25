@@ -36,6 +36,7 @@ import {
   QIcon,
   QTooltip
 } from 'quasar'
+import { mapGetters } from 'vuex'
 import {
   forbiddenPath
 } from '../utils/constant'
@@ -69,17 +70,25 @@ export default {
   },
   methods: {
     composeDialog,
-    async linkTo (path) {
-      await composeDialog({
-        title: 'jumpFunc',
-        message: 'This is the jump func, i just wanna warn u there',
-        isAlert: false
-      }, () => {
+    linkTo (path) {
+      console.log(this)
+      if (path !== 'articles' && !this.IS_LOGIN) {
+        composeDialog({
+          title: '尚未登录',
+          message: '进入当前页面需要登录',
+          isAlert: false
+        }, () => {
+          this.$root.$emit('callLoginModal')
+        }, () => {
+          return null
+        })
+      } else {
         this.$router.push(path)
-      }, () => {
-        alert('NO!')
-      })
+      }
     }
+  },
+  computed: {
+    ...mapGetters(['IS_LOGIN'])
   }
 }
 </script>

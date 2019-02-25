@@ -19,7 +19,6 @@ const composeDialog = async function (cfg, cb = () => {}, cbCancel = () => {}, t
     cancel: cfg.isAlert ? false : {push: false, label: '取消', color: 'negative'}
   })
     .then(() => {
-      console.log(this.$q)
       cb()
     })
     .catch(() => {
