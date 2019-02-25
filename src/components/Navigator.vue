@@ -73,9 +73,12 @@ export default {
       await composeDialog({
         title: 'jumpFunc',
         message: 'This is the jump func, i just wanna warn u there',
-        isAlert: true
+        isAlert: false
+      }, () => {
+        this.$router.push(path)
+      }, () => {
+        alert('NO!')
       })
-      this.$router.push(path)
     }
   }
 }
