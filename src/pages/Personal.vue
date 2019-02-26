@@ -1,11 +1,11 @@
 <template>
   <q-page padding>
-    <div class="row personal-container max-1200">
+    <div class="row personal-container page-commen">
       <aside class="col-3">
         <div class="aside-header spec-font">
           <span>Hello,</span>
           <br />
-          <span>Ben</span>
+          <span>{{userInfo.name | eclipse(5)}}</span>
         </div>
         <div class="aside-menu spec-font text-weight-bold">
           <ul>
@@ -44,18 +44,18 @@
                 <q-input v-else placeholder="输入更正后的邮箱" class="main-input"/>
               </q-field>
             </div>
-            <table v-else class="info-table col-md-6 col-sm-12">
-              <tr>
+            <table v-else class="info-table col-md-6 col-sm-12 full-width">
+              <tr class="">
                 <td>姓名</td>
-                <td>Ben</td>
+                <td>{{userInfo.name}}</td>
               </tr>
               <tr>
                 <td>年龄</td>
-                <td>18</td>
+                <td>{{userInfo.age}}</td>
               </tr>
               <tr>
                 <td>邮箱</td>
-                <td>1097843969@qq.com</td>
+                <td>{{userInfo.email}}</td>
               </tr>
             </table>
             <div class="main-button-group col-12">
@@ -67,8 +67,8 @@
         <div v-show="tag === 'article'" class="col-8 main-warp" key="article">
           <span class="spec-font main-title text-weight-bold">发布的文章</span>
           <div class="main-below row">
-            <div class="main-article column justify-between col-md-6 col-sm-12" v-for="(item, idx) in articles" :key="idx">
-              <span class="main-article-title">{{item.title}}</span>
+            <div class="main-article column justify-between col-md-6 col-sm-12" v-for="(item, idx) in userInfo.articles" :key="idx">
+              <span class="main-article-title">{{item.title || ''}}</span>
               <span class="main-article-tail spec-font">{{purseTimestamp(item.lastModified)}}</span>
             </div>
           </div>
@@ -76,7 +76,7 @@
         <div v-show="tag === 'quicklad'" class="col-8 main-warp" key="quicklad">
           <span class="spec-font main-title text-weight-bold">我的QuickLad</span>
           <div class="main-below row">
-            <div class="main-article column justify-between col-md-6 col-sm-12" v-for="(item, idx) in lads" :key="idx">
+            <div class="main-article column justify-between col-md-6 col-sm-12" v-for="(item, idx) in userInfo.lads" :key="idx">
               <span class="main-article-title">{{item.content | eclipse}}</span>
               <span class="main-article-tail spec-font">{{purseTimestamp(item.createdTime)}}</span>
             </div>
@@ -91,6 +91,9 @@
 </template>
 
 <script>
+import {
+  mapGetters
+} from 'vuex'
 import {
   QPage,
   QField,
@@ -249,6 +252,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['USER_INFO']),
+    userInfo () {
+      let arr = Object.getOwnPropertyNames(this.USER_INFO)
+      if (this.USER_INFO && arr.length > 0) {
+        return this.USER_INFO
+      }
+      return {}
+    },
     menuList () {
       return [
         {

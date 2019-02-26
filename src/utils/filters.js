@@ -1,7 +1,7 @@
 const filters = {
-  eclipse: (str = '') => {
-    if (str.length > 50) {
-      return str.slice(0, 50) + '...'
+  eclipse: (str = '', len = 50) => {
+    if (str.length > Number(len)) {
+      return str.slice(0, Number(len)) + '...'
     } else {
       return str
     }

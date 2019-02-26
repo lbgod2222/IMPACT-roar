@@ -41,7 +41,8 @@ import {
   forbiddenPath
 } from '../utils/constant'
 import {
-  composeDialog
+  composeDialog,
+  infoNotify
 } from '../utils/util'
 
 export default {
@@ -71,6 +72,7 @@ export default {
   methods: {
     composeDialog,
     linkTo (path) {
+      infoNotify(path)
       console.log(this)
       if (path !== 'articles' && !this.IS_LOGIN) {
         composeDialog({

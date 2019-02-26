@@ -22,7 +22,7 @@
       <router-view />
     </q-page-container>
     <!-- Place for modal or living stuff -->
-    <login-modal :show="isLoginShow" />
+    <login-modal :show="isLoginShow" @close="closeLoginModal"/>
   </q-layout>
 </template>
 
@@ -113,6 +113,9 @@ export default {
     },
     callLoginModal () {
       this.isLoginShow = true
+    },
+    closeLoginModal () {
+      this.isLoginShow = false
     },
     async getUserInfoFunc () {
       console.log('in the func')

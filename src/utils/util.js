@@ -1,10 +1,11 @@
 import moment from 'moment'
-import { Dialog, SessionStorage } from 'quasar'
+import { Dialog, SessionStorage, Notify } from 'quasar'
 
 const purseTimestamp = function (t) {
   return moment(t).format('YYYY/MM/DD')
 }
 
+// Dialog composer
 const composeDialog = async function (cfg, cb = () => {}, cbCancel = () => {}, that) {
   await Dialog.create({
     title: cfg.title,
@@ -26,6 +27,14 @@ const composeDialog = async function (cfg, cb = () => {}, cbCancel = () => {}, t
     })
 }
 
+// Notify composer
+const infoNotify = message => {
+  console.log(message)
+  const type = 'positive'
+  const color = 'positive'
+  Notify.create({ message, type, color, position: 'top', timeout: 1500 })
+}
+
 // cache actions
 const setCache = (key, value) => {
   console.log(SessionStorage)
@@ -43,5 +52,6 @@ export {
   composeDialog,
   setCache,
   getCache,
-  removeCache
+  removeCache,
+  infoNotify
 }

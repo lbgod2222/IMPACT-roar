@@ -70,7 +70,7 @@ import {
   mapMutations,
   mapActions
 } from 'vuex'
-import { setCache } from '../utils/util'
+import { setCache, infoNotify } from '../utils/util'
 import {
   QModal,
   QModalLayout,
@@ -136,6 +136,8 @@ export default {
         setCache('token', data.message)
         setCache('uid', data._id)
         this.setLoginState(true)
+        this.$emit('close')
+        infoNotify('登录成功')
       }
     }
   },
