@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { SessionStorage } from 'quasar'
 import { urls, server } from '../utils/constant'
 
 // COMPILE FUNCTIONS
@@ -12,7 +13,15 @@ const json2url = json => {
   return arr.join('&')
 }
 
-const fetch = (url, data, method, postHeaders) => {
+const fetch = (url, data, method, postHeaders, isNeedJWT = false) => {
+  let options = {}
+  let token = SessionStorage.get.item('token')
+  console.log(token)
+  if (isNeedJWT) {
+    options['headers'] = {
+      jwt: token
+    }
+  }
   for (let i in data) {
     if (url.indexOf(':' + i) > -1) {
       // const element = object[i];
@@ -29,11 +38,27 @@ const fetch = (url, data, method, postHeaders) => {
       break
 
     case 'post':
-      res = axios.post(server + url, data, postHeaders)
+      // res = axios.post(server + url, data, postHeaders, options)
+      res = axios({
+        method: 'POST',
+        url: server + url,
+        data: data,
+        headers: {
+          'jwt': token
+        }
+      })
       break
 
     case 'put':
-      res = axios.put(server + url, data, postHeaders)
+      // res = axios.put(server + url, data, postHeaders, options)
+      res = axios({
+        method: 'PUT',
+        url: server + url,
+        data: data,
+        headers: {
+          'jwt': token
+        }
+      })
       break
   }
   return res
@@ -60,9 +85,13 @@ const api = {
   userInfo: (params) => {
     return fetch(urls.userInfo, params, 'get')
   },
+  // 更新用户信息
+  updateInfo: (params) => {
+    return fetch(urls.updateInfo, params, 'put', true)
+  },
   // 发布新文章
   postArticle: (params) => {
-    return fetch(urls.postArticle, params, 'post')
+    return fetch(urls.postArticle, params, 'post', true)
   },
   // 根据用户获取文章简略列表
   userArticleList: (params) => {
@@ -82,7 +111,7 @@ const api = {
   },
   // 发布评论
   postComment: (params) => {
-    return fetch(urls.postComment, params, 'post')
+    return fetch(urls.postComment, params, 'post', true)
   },
   // 获取评论
   articleComments: (params) => {
@@ -90,7 +119,7 @@ const api = {
   },
   // 更改评论
   adjustComment: (params) => {
-    return fetch(urls.adjustComment, params, 'put')
+    return fetch(urls.adjustComment, params, 'put', true)
   },
   // 回复评论
   replyComment: (params) => {
@@ -98,7 +127,7 @@ const api = {
   },
   // 发布LAD
   postLad: (params) => {
-    return fetch(urls.postLad, params, 'post')
+    return fetch(urls.postLad, params, 'post', true)
   },
   // 获取LAD
   lads: (params) => {
@@ -110,7 +139,7 @@ const api = {
   },
   // 修改LADS
   changeLad: (params) => {
-    return fetch(urls.changeLad, params, 'post')
+    return fetch(urls.changeLad, params, 'post', true)
   }
 }
 

@@ -21,6 +21,12 @@ export default {
   }, params) => {
     return api.createUser(params)
   },
+  // 更新用户信息
+  updateUser: ({
+    commit
+  }, params) => {
+    return api.updateInfo(params)
+  },
   // 发送验证邮件
   sendValidMail: ({
     commit

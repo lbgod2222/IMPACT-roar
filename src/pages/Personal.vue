@@ -31,17 +31,19 @@
           <div class="main-below row">
             <div v-if="isEditProfile" class="col-md-6 col-sm-12">
               <q-field class="main-field" label="姓名" label-width='2'>
-                <q-input class="main-input"/>
+                <q-input class="main-input" v-model="name"/>
               </q-field>
               <q-field class="main-field" label="年龄" label-width='2'>
-                <q-input class="main-input"/>
+                <q-input class="main-input" v-model="age"/>
+              </q-field>
+              <q-field class="main-field" label="验证码" label-width='2'>
+                <div class="row justify-between">
+                  <q-input class="col-7" v-model="valid" placeholder="点击右侧按钮，将邮箱中的信息填入"></q-input>
+                  <q-btn size="14px" dense outline color="secondary" :loading="loading" @click="sendValidFunc">验证邮箱</q-btn>
+                </div>
               </q-field>
               <q-field class="main-field" label="邮箱" label-width='2'>
-                <div v-if="!hasValidEmail" class="row justify-between">
-                  <q-input class="col-7" placeholder="点击右侧按钮，将邮箱中的信息填入"></q-input>
-                  <q-btn size="14px" dense outline color="secondary" :loading="loading" @click="simulateProgress">验证邮箱</q-btn>
-                </div>
-                <q-input v-else placeholder="输入更正后的邮箱" class="main-input"/>
+                <q-input placeholder="输入更正后的邮箱" v-model="email" class="main-input"/>
               </q-field>
             </div>
             <table v-else class="info-table col-md-6 col-sm-12 full-width">
@@ -60,7 +62,7 @@
             </table>
             <div class="main-button-group col-12">
               <q-btn v-if="!isEditProfile" color="negative" @click="isEditProfile = !isEditProfile">修改信息</q-btn>
-              <q-btn v-else color="info" @click="isEditProfile = !isEditProfile">确认修改</q-btn>
+              <q-btn v-else color="info" @click="confirmUpdate">确认修改</q-btn>
             </div>
           </div>
         </div>
@@ -92,7 +94,8 @@
 
 <script>
 import {
-  mapGetters
+  mapGetters,
+  mapActions
 } from 'vuex'
 import {
   QPage,
@@ -101,7 +104,7 @@ import {
   QBtn,
   debounce
 } from 'quasar'
-import { purseTimestamp } from '../utils/util'
+import { purseTimestamp, infoNotify, warnNotify } from '../utils/util'
 
 export default {
   name: 'Personal',
@@ -118,6 +121,11 @@ export default {
       isEditProfile: false,
       loading: false,
       hasValidEmail: false,
+      // form data
+      name: '',
+      age: '',
+      valid: '',
+      email: '',
       // temp fake data
       articles: [
         {
@@ -226,6 +234,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['sendValidMail', 'validMail', 'updateUser']),
     purseTimestamp,
     debounce,
     select (idx, tag) {
@@ -235,20 +244,45 @@ export default {
         this.tag = tag
       }, 1000)
     },
-    simulateProgress () {
-      // we set loading state
-      this.loading = true
-
-      // simulate a delay, like in
-      // waiting for an Ajax call
-      setTimeout(() => {
-        // delay is over, now we reset loading state
-        this.loading = false
-        this.hasValidEmail = true
-        // DON't forget to reset loading state
-        // otherwise the button will keep on
-        // being in "loading" state
-      }, 3000)
+    async sendValidFunc () {
+      if (this.userInfo && this.userInfo.email) {
+        this.loading = true
+        let result = await this.sendValidMail({
+          address: this.userInfo.email
+        })
+        if (result && result.data && result.data.success) {
+          this.loading = false
+          infoNotify('发送成功')
+        } else {
+          warnNotify('服务器错误')
+        }
+      }
+    },
+    async confirmUpdate () {
+      if (this.email && this.name && this.valid && this.age) {
+        let validResult = await this.validMail({
+          authCode: this.valid,
+          address: this.userInfo.email
+        })
+        if (validResult && validResult.data && validResult.data.success) {
+          let result = await this.updateUser({
+            uid: this.userInfo._id,
+            username: this.username,
+            password: this.password,
+            email: this.email,
+            name: this.name,
+            age: this.age
+          })
+          if (result && result.data && result.data.success) {
+            infoNotify('更新成功')
+          }
+        } else {
+          warnNotify('验证码不正确')
+        }
+      } else {
+        warnNotify('表格不完整')
+      }
+      this.isEditProfile = false
     }
   },
   computed: {

@@ -6,6 +6,7 @@ const urls = {
   createUser: '/user',
   login: '/user/login',
   userInfo: '/user/:uid',
+  updateInfo: '/user/:uid',
   // ARTICLE
   postArticle: '/article',
   userArticleList: 'articles/:uid',
