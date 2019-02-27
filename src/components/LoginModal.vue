@@ -28,27 +28,32 @@
           <!-- SIGN UP -->
           <div class="q-mt-lg" v-show="flag === 1" key="form-1">
             <q-field>
-              <q-input placeholder="USERNAME" v-model="username" class="text-center"/>
+              <q-input placeholder="用户名" v-model="username" class="text-center"/>
             </q-field>
             <q-field class="q-mt-sm">
-              <q-input type="password" v-model="password" placeholder="PASSWORD"/>
+              <q-input type="password" v-model="password" placeholder="密码"/>
             </q-field>
             <q-field class="q-mt-sm">
-              <q-input type="password" v-model="password2" placeholder="PASSWORD CONFIRM"/>
+              <q-input type="password" v-model="password2" placeholder="重复输入密码"/>
+            </q-field>
+            <q-field>
+              <q-input placeholder="昵称" v-model="name" class="text-center"/>
             </q-field>
             <div class="row justify-between">
               <q-field class="q-mt-sm col-8">
-                <q-input type="email" v-model="email" placeholder="EMAIL"/>
+                <q-input type="email" v-model="email" placeholder="电子邮件"/>
               </q-field>
-              <div class="send-btn q-btn inline relative-position q-btn-item non-selectable q-btn-rectangle q-btn-outline q-focusable q-hoverable q-mt-sm">
-                发送
+              <div class="">
+                <q-btn class="send-btn" size="14px" outline color="secondary" :loading="isSendBtnLoad" @click="sendValidFunc">
+                  发送
+                </q-btn>
               </div>
             </div>
             <q-field class="q-mt-sm">
-              <q-input type="text" v-model="valid" placeholder="VALID"/>
+              <q-input type="text" v-model="valid" placeholder="验证码"/>
             </q-field>
           </div>
-          <q-btn v-show="flag === 1" :loading="loadBtn" class="full-width q-mt-lg" color="secondary" key="btn-1">
+          <q-btn v-show="flag === 1" :loading="loadBtn" class="full-width q-mt-lg" color="secondary" key="btn-1" @click="registFunction">
             注册
           </q-btn>
           <!-- FORGOT -->
@@ -70,7 +75,7 @@ import {
   mapMutations,
   mapActions
 } from 'vuex'
-import { setCache, infoNotify } from '../utils/util'
+import { setCache, infoNotify, warnNotify } from '../utils/util'
 import {
   QModal,
   QModalLayout,
@@ -97,6 +102,7 @@ export default {
       username: '',
       password: '',
       password2: '',
+      name: '',
       email: '',
       valid: '',
       // state part
@@ -104,6 +110,8 @@ export default {
         username: '',
         password: ''
       },
+      // btn state
+      isSendBtnLoad: false,
       confirmBtn: [
         {
           icon: 'arrow_forward',
@@ -117,7 +125,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setLoginState']),
-    ...mapActions(['login', 'createUser']),
+    ...mapActions(['login', 'createUser', 'sendValidMail', 'validMail']),
     change (num) {
       this.flag = -1
       setTimeout(() => {
@@ -138,6 +146,47 @@ export default {
         this.setLoginState(true)
         this.$emit('close')
         infoNotify('登录成功')
+      }
+    },
+    async sendValidFunc () {
+      if (this.email) {
+        this.isSendBtnLoad = true
+        let result = await this.sendValidMail({
+          address: this.email
+        })
+        console.log(result)
+        if (result && result.data && result.data.success) {
+          this.isSendBtnLoad = false
+          infoNotify('发送成功')
+        }
+      } else {
+        warnNotify('请输入邮箱')
+      }
+    },
+    async registFunction () {
+      console.log('start here')
+      if (this.username && this.password && this.password2 & this.password2 === this.password && this.name && this.email && this.valid) {
+        // form complete, need to check valid
+        let validResult = await this.validMail({
+          authCode: this.valid,
+          address: this.email
+        })
+        if (validResult && validResult.data && validResult.data.success) {
+          let result = await this.createUser({
+            username: this.username,
+            password: this.password,
+            email: this.email,
+            name: this.name
+          })
+          if (result && result.data && result.data.success) {
+            infoNotify('注册成功')
+            this.flag = 0
+          }
+        } else {
+          warnNotify('验证码不正确')
+        }
+      } else {
+        warnNotify('表格不完整')
       }
     }
   },
@@ -165,4 +214,7 @@ export default {
 .send-btn
   height 20px;
   line-height 28px;
+.btn-wrapper
+  padding 10px
+  box-sizing content-box
 </style>

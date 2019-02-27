@@ -44,6 +44,14 @@ const api = {
   createUser: (params) => {
     return fetch(urls.createUser, params, 'post')
   },
+  // 发送验证邮件
+  sendValidMail: (params) => {
+    return fetch(urls.sendValidMail, params, 'get')
+  },
+  // 验证邮件
+  validMail: (params) => {
+    return fetch(urls.validMail, params, 'get')
+  },
   // 登录
   login: (params) => {
     return fetch(urls.login, params, 'get')

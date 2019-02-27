@@ -29,9 +29,15 @@ const composeDialog = async function (cfg, cb = () => {}, cbCancel = () => {}, t
 
 // Notify composer
 const infoNotify = message => {
-  console.log(message)
   const type = 'positive'
   const color = 'positive'
+  Notify.create({ message, type, color, position: 'top', timeout: 1500 })
+}
+
+// Notify composer
+const warnNotify = message => {
+  const type = 'negative'
+  const color = 'negative'
   Notify.create({ message, type, color, position: 'top', timeout: 1500 })
 }
 
@@ -53,5 +59,6 @@ export {
   setCache,
   getCache,
   removeCache,
-  infoNotify
+  infoNotify,
+  warnNotify
 }

@@ -21,7 +21,10 @@ const urls = {
   postLad: '/lad',
   lads: '/lads',
   ladsByColor: '/lads/:color',
-  changeLad: '/lads/:id'
+  changeLad: '/lads/:id',
+  // MAIL
+  sendValidMail: '/mailValid',
+  validMail: '/checkValid'
 }
 
 const colorBox = {
