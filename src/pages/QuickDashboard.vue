@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page class="min-1100" padding>
     <div class="tab-container row justify-around">
       <div class="column col-3">
         <draggable :list="colList_1" :options="groupOptions" @start="drag=true" @end="drag=false" :move="checkFix" class="leastSpaec">
@@ -37,9 +37,10 @@
         <q-fab-action
           color="secondary"
           icon="save"
+          @click="postAllQuicklad"
         >
           <q-tooltip>
-            Save all the quicklads
+            一键发布
           </q-tooltip>
         </q-fab-action>
       </q-fab>
@@ -64,9 +65,19 @@ import {
   QFabAction,
   QTooltip
 } from 'quasar'
+import {
+  mapActions,
+  mapGetters
+} from 'vuex'
 import draggable from 'vuedraggable'
 import LadBox from '../components/LadBox'
 import { colorBox } from '../utils/constant'
+import {
+  purseTimestamp,
+  infoNotify,
+  warnNotify,
+  composeDialog
+} from '../utils/util'
 
 export default {
   name: 'QuickDashboard',
@@ -129,6 +140,8 @@ export default {
     }
   },
   methods: {
+    composeDialog,
+    ...mapActions(['postQuicklad']),
     checkFix (event) {
       return (event.draggedContext.element.pined)
     },
@@ -148,7 +161,6 @@ export default {
     },
     changeTheme (obj) {
       let { line, idx, color } = obj
-      console.log(arguments)
       switch (line) {
         case '1':
           this.colList_1[idx].themeColor = color
@@ -206,6 +218,59 @@ export default {
           this.colList_3.splice(idx, 1)
           break
       }
+    },
+    // Post quicklad, just for one
+    async postQuickladFunc (obj) {
+      let { title, themeColor } = obj
+      let result = await this.postQuicklad({
+        content: title,
+        color: themeColor,
+        creator: this.USER_INFO._id,
+        createdTime: (() => {
+          let now = new Date().getTime()
+          return purseTimestamp(now)
+        })()
+      })
+      if (result && result.data && result.data.success) {
+        // this.title = ''
+        // this.content = ''
+        infoNotify('发布成功')
+      } else {
+        warnNotify('出了一些问题')
+      }
+    },
+    postAllQuicklad () {
+      if (this.colList_1.length) {
+        this.colList_1.forEach(e => {
+          this.postQuickladFunc(e)
+        })
+      }
+      if (this.colList_2.length) {
+        this.colList_2.forEach(e => {
+          this.postQuickladFunc(e)
+        })
+      }
+      if (this.colList_3.length) {
+        this.colList_3.forEach(e => {
+          this.postQuickladFunc(e)
+        })
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(['USER_INFO'])
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.colList_1.length || this.colList_2.length || this.colList_3.length) {
+      composeDialog({
+        title: '是否放弃',
+        message: '是否放弃这些QUICKLAD?',
+        isAlert: false
+      }, () => {
+        next()
+      }, () => {
+        return null
+      })
     }
   }
 }

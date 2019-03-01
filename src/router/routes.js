@@ -1,6 +1,5 @@
 // LOAD function
 function load (component, isLayout = false) {
-  console.log('what we load:', component, isLayout)
   return isLayout ? () => import(`layouts/${component}.vue`) : () => import(`pages/${component}.vue`)
 }
 
@@ -29,7 +28,7 @@ const routes = [
         component: load('Articles')
       },
       {
-        path: 'article',
+        path: 'article/:aid',
         name: 'article',
         component: load('ArticleDetail')
       },

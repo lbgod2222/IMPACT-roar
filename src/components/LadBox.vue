@@ -11,7 +11,8 @@
       </div> -->
       <div class="col-auto q-card-title-extra hover-appear drag-area">
         <q-icon :name="meta.pined ? 'mdi-pin' : 'mdi-pin-off'" class="q-ml-xs" :color="boxColor[meta.themeColor].content" @click.native="changPin"></q-icon>
-        <q-icon name="more_vert" :color="boxColor[meta.themeColor].content" class="q-ml-xs">
+        <!-- right top option button -->
+        <!-- <q-icon name="more_vert" :color="boxColor[meta.themeColor].content" class="q-ml-xs">
           <q-popover>
             <q-list link class="no-border">
               <q-item v-close-overlay>
@@ -25,7 +26,7 @@
               </q-item>
             </q-list>
           </q-popover>
-        </q-icon>
+        </q-icon> -->
       </div>
     </div>
     <div class="q-card-primary q-card-container row no-wrap">
@@ -127,7 +128,6 @@ export default {
       this.$emit('changeTheme', pack)
     },
     sendContent () {
-      console.log('clicked twice')
       this.editing = false
       let pack = {
         content: this.content,

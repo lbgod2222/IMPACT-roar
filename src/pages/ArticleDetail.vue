@@ -6,29 +6,29 @@
         {{article.title}}
       </div>
       <div class="article-subtitle text-neutral offset-md-3 spec-font">
-        LastModified: {{purseTimestamp(article.lastModified)}}
+        最后修改时间: {{purseTimestamp(article.lastModified)}}
       </div>
     </header>
     <!-- aside -->
     <div class="row content mt-2">
       <aside class="col-md-3 col-sm-12 row q-pt-lg">
         <div class="aside-wrapper">
-          <div class="tags justify-start">
+          <div v-if="article.meta && article.meta.tags && article.meta.tags.length > 0" class="tags justify-start">
             <span class="tag uppercase cursor-pointer" v-for="(item, idx) in article.meta.tags" :key="idx">
               {{item}}
             </span>
           </div>
-          <div class="action-box row justify-start">
+          <!-- <div class="action-box row justify-start">
             <div class="collect row text-center col-lg-4 col-md-12 cursor-pointer">
-              <span class="btn col-12"><q-icon name="library_add" size="2rem"></q-icon>（ {{article.meta.cultivated}} ）</span>
+              <span class="btn col-12"><q-icon name="library_add" size="2rem"></q-icon>（ {{article.meta && article.meta.cultivated ? article.meta.cultivated : 0}} ）</span>
               <span class="btn-tip col-12">COLLECT</span>
             </div>
             <div class="vote row text-center col-lg-4 col-md-12 cursor-pointer">
-              <span class="btn col-12"><q-icon name="thumb_up" size="2rem"></q-icon>（ {{article.meta.votes}} ）</span>
+              <span class="btn col-12"><q-icon name="thumb_up" size="2rem"></q-icon>（ {{article.meta && article.meta.voted ? article.meta.voted : 0}} ）</span>
               <span class="btn-tip col-12">VOTE</span>
             </div>
-          </div>
-          <div class="seed">
+          </div> -->
+          <div class="seed" v-if="article.seed">
             <span>SEED INFO:</span>
             <br />
             <span>{{article.seed.content}}</span>
@@ -46,23 +46,38 @@
           全部评论
         </div>
         <div class="comment-body spec-font" v-for="(item, idx) in comments" :key="idx">
-          <span class="comment-title font-18 text-weight-bold">{{item.tempNick || item.creator.name}}</span>
+          <span class="comment-title font-18 text-weight-bold">{{item.creator ? item.creator.name : ''}}</span>
           <span class="comment-content spec-font">{{item.content}}</span>
-          <span v-if="item.replies.length && replyAppeared !== idx" @click="showReply(idx)" class="comment-reply font-12 text-weight-bold">展开回复</span>
-          <span v-if="item.replies.length && replyAppeared === idx" @click="hideReply(idx)" class="comment-reply font-12 text-weight-bold">收起回复</span>
+          <div class="comment-reply font-12 text-weight-bold">
+            <span @click="toggleBox(idx)">回复</span>
+            <span v-if="item.replies.length && replyAppeared !== idx" @click="showReply(idx)" class="comment-reply font-12 text-weight-bold q-ml-sm">展开回复( {{item.replies.length || 0}} )</span>
+            <span v-if="item.replies.length && replyAppeared === idx" @click="hideReply(idx)" class="comment-reply font-12 text-weight-bold q-ml-sm">收起回复</span>
+          </div>
           <span class="float-right">{{purseTimestamp(item.createdTime)}}</span>
           <q-slide-transition>
             <div class="reply-content" v-show="replyAppeared === idx">
               <div class="reply-body" v-for="(item, idx) in item.replies" :key="idx">
-                <span class="comment-title font-18 text-weight-bold">{{item.tempNick || item.creator.name}}</span>
+                <span class="comment-title font-18 text-weight-bold">{{item.creator ? item.creator.name : ''}}</span>
                 <span class="comment-content spec-font">{{item.content}}</span>
                 <span class="float-right">{{purseTimestamp(item.createdTime)}}</span>
               </div>
             </div>
           </q-slide-transition>
+          <q-slide-transition>
+            <div class="reply-content" v-show="needReply === idx">
+              <q-input type="text" placeholder="你想说点什么？" v-model="replyContent" :after="replytBtn"></q-input>
+            </div>
+          </q-slide-transition>
         </div>
         <div class="comment-action">
-          <q-pagination color="secondary" size="20px" direction-links :min="1" :max="10"/>
+          <div class="comment-wrap">
+            <q-input
+            type="textarea" rows="4" float-label="你想说点什么？"
+            v-model="commentContent"
+            inverted
+            :after="commentBtn"></q-input>
+          </div>
+          <q-pagination class="q-mt-md" color="secondary" size="16px" direction-links :min="1" v-model="pagination.page" @input="changePage" :max="maxPage"/>
         </div>
       </div>
     </div>
@@ -75,9 +90,14 @@ import {
   QIcon,
   QBtn,
   QPagination,
-  QSlideTransition
+  QSlideTransition,
+  QInput
 } from 'quasar'
-import { purseTimestamp } from '../utils/util'
+import {
+  mapActions,
+  mapGetters
+} from 'vuex'
+import { purseTimestamp, infoNotify, warnNotify, composeDialog } from '../utils/util'
 
 export default {
   name: 'ArticleDetail',
@@ -86,118 +106,160 @@ export default {
     QBtn,
     QIcon,
     QPagination,
-    QSlideTransition
+    QSlideTransition,
+    QInput
   },
   data () {
     return {
-      article: {
-        'meta': {
-          'tags': ['一条长长长长长长长长的TAG', 'false', 'do', 'you', 'want', 'me'],
-          'votes': 38,
-          'cultivated': 5
-        },
-        'seed': {
-          'content': 'Balalalalalalala',
-          'color': 'yellow',
-          'createdTime': '2018-08-18T16:00:00.000Z',
-          'tempNick': '',
-          'creator': {
-            'name': 'Jungle',
-            'email': 'jungle@gmail.com',
-            'age': '35'
-          }
-        },
-        'lastModified': '2018-08-18T16:00:00.000Z',
-        'comments': [],
-        '_id': '5b787ff631e1a940d4732357',
-        'title': '即使没有更多情况我也要进行一次中文测试',
-        'content': `千里之行，始于足下 This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! This should be a very long content that i have never seen, trust me there! `,
-        '__v': 0
-      },
-      comments: [
+      aid: '',
+      article: {},
+      comments: [],
+      replyAppeared: -1,
+      needReply: -1,
+      // action area
+      commentContent: '',
+      replyContent: '',
+      pagination: {
+        page: 1,
+        rowsNumber: 0,
+        rowsPerPage: 10
+      }
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.aid = to.params.aid
+    })
+  },
+  computed: {
+    ...mapGetters(['IS_LOGIN', 'USER_INFO']),
+    commentBtn () {
+      return [
         {
-          replies: [
-            {
-              replies: [],
-              createdTime: '2018-11-07T09:18:51.319Z',
-              _id: '5be2ae0e789085140cde0c80',
-              creator: {
-                name: 'Danny',
-                email: 'DannyLuvJenny@google.com',
-                username: 'danny123',
-                age: 18,
-                hashed_password: 'f73dad875833944cdfe83378949bf32557de2cae',
-                salt: '762959350905',
-                authToken: '',
-                articls: [],
-                cultivated: [],
-                comments: [],
-                lads: [],
-                messages: [],
-                _id: '5be01f20eabfb92bc86f15fb',
-                __v: 0
-              },
-              content: 'Here  came the reply2',
-              __v: 0
-            }
-          ],
-          createdTime: '2018-11-07T09:07:01.186Z',
-          _id: '5be2ab98df2f5c47d4816015',
-          content: '久闻李老先生使得一手好剑，端的是两袖青蛇，剑势一往无前',
-          creator: {
-            name: 'Danny',
-            email: 'DannyLuvJenny@google.com',
-            username: 'danny123',
-            age: 18,
-            hashed_password: 'f73dad875833944cdfe83378949bf32557de2cae',
-            salt: '762959350905',
-            authToken: '',
-            articls: [],
-            cultivated: [],
-            comments: [],
-            lads: [],
-            messages: [],
-            _id: '5be01f20eabfb92bc86f15fb',
-            __v: 0
-          },
-          aid: '5be1472eb833af406c240212',
-          __v: 0
-        },
-        {
-          replies: [],
-          createdTime: '2018-12-27T06:40:57.367Z',
-          _id: '5c2477ce40055645bc81c8d3',
-          content: '这条消息我想要回复',
-          creator: {
-            name: 'Danny',
-            email: 'DannyLuvJenny@google.com',
-            username: 'danny123',
-            age: 18,
-            hashed_password: 'f73dad875833944cdfe83378949bf32557de2cae',
-            salt: '762959350905',
-            authToken: '',
-            articls: [],
-            cultivated: [],
-            comments: [],
-            lads: [],
-            messages: [],
-            _id: '5be01f20eabfb92bc86f15fb',
-            __v: 0
-          },
-          aid: '5be1472eb833af406c240212',
-          __v: 0
+          icon: 'send',
+          content: true,
+          handler: () => this.postCommentFunc()
         }
-      ],
-      replyAppeared: -1
+      ]
+    },
+    replytBtn () {
+      return [
+        {
+          icon: 'send',
+          content: true,
+          handler: () => this.replyCommentFunc(this.needReply)
+        }
+      ]
+    },
+    maxPage () {
+      return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage)
     }
   },
   methods: {
+    composeDialog,
+    ...mapActions(['getArticleDetail', 'getComments', 'postComment', 'replyComment']),
     purseTimestamp,
     showReply (idx) {
+      this.needReply = -1
       this.replyAppeared = idx
     },
     hideReply () {
       this.replyAppeared = -1
+    },
+    toggleBox (idx) {
+      this.replyAppeared = -1
+      if (this.needReply > -1) {
+        this.needReply = -1
+      } else {
+        this.needReply = idx
+      }
+    },
+    loginCheck () {
+      composeDialog({
+        title: '尚未登录',
+        message: '进入当前页面需要登录',
+        isAlert: false
+      }, () => {
+        this.$root.$emit('callLoginModal')
+      }, () => {
+        return null
+      })
+    },
+    async getArticleFunc () {
+      let result = await this.getArticleDetail({
+        aid: this.aid
+      })
+      if (result && result.data && result.data.success) {
+        this.article = result.data.data
+      }
+    },
+    async getArticleCommentFunc () {
+      let result = await this.getComments({
+        aid: this.aid,
+        offset: (this.pagination.page - 1) * this.pagination.rowsPerPage,
+        limit: this.pagination.rowsPerPage,
+        sortBy: 'createdTime:desc'
+      })
+      if (result && result.data && result.data.success) {
+        this.comments = result.data.data
+        this.pagination.rowsNumber = result.data.count
+      }
+    },
+    async postCommentFunc () {
+      if (!this.IS_LOGIN) {
+        this.loginCheck()
+      } else {
+        let result = await this.postComment({
+          aid: this.aid,
+          content: this.commentContent,
+          creator: this.USER_INFO._id,
+          createdTime: (() => {
+            let now = new Date().getTime()
+            return purseTimestamp(now)
+          })()
+        })
+        if (result && result.data && result.data.success) {
+          this.commentContent = ''
+          infoNotify('评论成功')
+        } else {
+          warnNotify('出了一些问题')
+        }
+      }
+    },
+    async replyCommentFunc (idx) {
+      if (!this.IS_LOGIN) {
+        this.loginCheck()
+      } else {
+        let cid = this.comments[idx]._id
+        let result = await this.replyComment({
+          cid: cid,
+          uid: this.USER_INFO._id,
+          content: this.replyContent,
+          createdTime: (() => {
+            let now = new Date().getTime()
+            return purseTimestamp(now)
+          })()
+        })
+        if (result && result.data && result.data.success) {
+          this.replyContent = ''
+          this.needReply = -1
+          infoNotify('评论成功')
+        } else {
+          warnNotify('出了一些问题')
+        }
+      }
+    },
+    changePage (num) {
+      this.pagination.page = num
+      this.getArticleCommentFunc()
+    }
+  },
+  watch: {
+    aid (val) {
+      if (val) {
+        this.getArticleFunc()
+        this.getArticleCommentFunc()
+      }
     }
   }
 }

@@ -14,7 +14,7 @@ const urls = {
   articleDetail: '/article/:aid',
   adjustArticle: '/article/adjust/:aid',
   // COMMENT
-  postComment: '/comment',
+  postComment: '/comment/:aid',
   articleComments: '/comments/:aid',
   adjustComment: '/comments/:cid',
   replyComment: '/comments/reply/:cid',
@@ -22,6 +22,7 @@ const urls = {
   postLad: '/lad',
   lads: '/lads',
   ladsByColor: '/lads/:color',
+  ladsByText: '/search',
   changeLad: '/lads/:id',
   // MAIL
   sendValidMail: '/mailValid',

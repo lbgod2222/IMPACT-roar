@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="show" no-backdrop-dismiss>
+  <q-modal v-model="show" no-backdrop-dismiss @escape-key="closeModal">
     <q-modal-layout class="login-padding shadow-0 bg-tertiary min-450" :header-class="['shadow-0']" :content-class="['bg-tertiary']" :footer-class="['shadow-0', 'q-mt-md']">
       <div slot="header" class="login-title shadow-0 text-secondary">
         IMPACT
@@ -132,13 +132,15 @@ export default {
         this.flag = num
       }, 1000)
     },
+    closeModal () {
+      this.$emit('close')
+    },
     async loginFuction () {
       let obj = {
         username: this.loginState.username,
         password: this.loginState.password
       }
       let result = await this.login(obj)
-      console.log('backend reback:', result)
       let data = result.data.data
       if (result && result.data.success) {
         setCache('token', data.message)
@@ -154,7 +156,6 @@ export default {
         let result = await this.sendValidMail({
           address: this.email
         })
-        console.log(result)
         if (result && result.data && result.data.success) {
           this.isSendBtnLoad = false
           infoNotify('发送成功')
@@ -164,7 +165,6 @@ export default {
       }
     },
     async registFunction () {
-      console.log('start here')
       if (this.username && this.password && this.password2 & this.password2 === this.password && this.name && this.email && this.valid) {
         // form complete, need to check valid
         let validResult = await this.validMail({

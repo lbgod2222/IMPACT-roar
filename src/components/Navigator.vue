@@ -11,21 +11,26 @@
         文章
       </q-tooltip>
     </q-icon>
-    <q-icon v-show="emit" name="mdi-account-box" size="large" class="ico cursor-pointer" @click.native="linkTo('personal')">
-      <q-tooltip :offset='[0,5]'>
-        用户
-      </q-tooltip>
-    </q-icon>
     <q-icon v-show="emit" name="mdi-view-dashboard" size="large" class="ico cursor-pointer" @click.native="linkTo('dashboard')">
       <q-tooltip :offset='[0,5]'>
         Dashboard
       </q-tooltip>
     </q-icon>
-    <q-icon v-show="emit" name="mdi-earth" size="large" class="ico cursor-pointer" @click.native="emit = !emit">
+    <q-icon v-show="emit" name="mdi-format-quote-open" size="large" class="ico cursor-pointer" @click.native="linkTo('quicklad')">
+      <q-tooltip :offset='[0,5]'>
+        Quicklad
+      </q-tooltip>
+    </q-icon>
+    <q-icon v-show="emit" name="mdi-account-box" size="large" class="ico cursor-pointer" @click.native="linkTo('personal')">
+      <q-tooltip :offset='[0,5]'>
+        用户
+      </q-tooltip>
+    </q-icon>
+    <!-- <q-icon v-show="emit" name="mdi-earth" size="large" class="ico cursor-pointer" @click.native="emit = !emit">
       <q-tooltip :offset='[0,5]'>
         全球化
       </q-tooltip>
-    </q-icon>
+    </q-icon> -->
   </div>
   <!-- </q-page-sticky> -->
 </template>
@@ -41,8 +46,7 @@ import {
   forbiddenPath
 } from '../utils/constant'
 import {
-  composeDialog,
-  infoNotify
+  composeDialog
 } from '../utils/util'
 
 export default {
@@ -72,20 +76,19 @@ export default {
   methods: {
     composeDialog,
     linkTo (path) {
-      infoNotify(path)
-      console.log(this)
-      if (path !== 'articles' && !this.IS_LOGIN) {
+      if (path !== 'articles' && path !== 'quicklad' && !this.IS_LOGIN) {
         composeDialog({
           title: '尚未登录',
           message: '进入当前页面需要登录',
           isAlert: false
         }, () => {
+          console.log('damn!')
           this.$root.$emit('callLoginModal')
         }, () => {
           return null
         })
       } else {
-        this.$router.push(path)
+        this.$router.push('/' + path)
       }
     }
   },

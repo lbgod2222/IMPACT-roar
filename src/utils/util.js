@@ -43,7 +43,6 @@ const warnNotify = message => {
 
 // cache actions
 const setCache = (key, value) => {
-  console.log(SessionStorage)
   return SessionStorage.set(key, value)
 }
 const getCache = key => {

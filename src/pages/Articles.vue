@@ -7,11 +7,11 @@
       </div>
       <div class="max-1200 self-center" :class="{'col-12': type === 'all'}">
         <article-list-item v-for="(article, idx) in articles" :key='idx' :article="article" @open="toArticle(article._id)"/>
-          <q-pagination color="secondary" size="20px" direction-links />
+        <q-pagination color="secondary" size="16px" :max="maxPage" v-model="pagination.page" @input="changePage" direction-links />
       </div>
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn round size="lg" color="primary" icon="add">
+      <q-btn round size="lg" color="primary" icon="add" @click="jumpWritter">
         <q-tooltip :offset="[0, 5]">
           发布一篇文章
         </q-tooltip>
@@ -28,6 +28,9 @@ import {
   QBtn,
   QTooltip
 } from 'quasar'
+import {
+  mapActions
+} from 'vuex'
 import ArticleListItem from '../components/ArticleListItem'
 
 export default {
@@ -43,55 +46,13 @@ export default {
   data () {
     return {
       type: 'all',
-      articles: [
-        {
-          meta: {
-            tags: ['Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive'],
-            votes: 0,
-            cultivated: 0
-          },
-          author: {
-            name: 'Danny', // 也许只留一个名字就好了//id？
-            username: 'danny123',
-            _id: '5be01f20eabfb92bc86f15fb'
-          },
-          lastModified: '2018-08-28T01:53:42.642Z',
-          _id: '5b84ab5d92895d4e94b9713e',
-          title: '看待新奇事物的新奇本领'
-        },
-        {
-          meta: {
-            tags: [
-              'well'
-            ],
-            votes: 0,
-            cultivated: 0
-          },
-          author: {
-            name: 'Danny', // 也许只留一个名字就好了//id？
-            _id: '5be01f20eabfb92bc86f15fb'
-          },
-          lastModified: '2018-08-25T16:30:46.166Z',
-          _id: '5b81843ac0357512107f3629',
-          title: 'The seventh article'
-        },
-        {
-          meta: {
-            tags: [
-              'hush3'
-            ],
-            votes: 0,
-            cultivated: 0
-          },
-          author: {
-            name: 'Danny', // 也许只留一个名字就好了//id？
-            _id: '5be01f20eabfb92bc86f15fb'
-          },
-          lastModified: '2018-08-22T10:35:13.164Z',
-          _id: '5b7d3c8a228b532db0c07836',
-          title: 'The seventh article'
-        }
-      ]
+      intervalNum: -1,
+      pagination: {
+        page: 1,
+        rowsNumber: 0,
+        rowsPerPage: 10
+      },
+      articles: []
     }
   },
   beforeMount () {
@@ -100,10 +61,39 @@ export default {
       this.routeContent = this.$route.meta.id || this.$route.meta.tag
     }
   },
+  mounted () {
+    this.intervalNum = setInterval(() => {
+      this.getArticleListFunc()
+    }, 60000)
+  },
+  created () {
+    this.getArticleListFunc()
+  },
+  beforeDestroy () {
+    clearInterval(this.intervalNum)
+  },
   methods: {
+    ...mapActions(['getArticleList']),
     toArticle (id) {
-      console.log('jumped')
-      this.$router.push('article')
+      this.$router.push('/article/' + id)
+    },
+    changePage (num) {
+      this.pagination.page = num
+      this.getArticleListFunc()
+    },
+    async getArticleListFunc () {
+      let result = await this.getArticleList({
+        offset: (this.pagination.page - 1) * this.pagination.rowsPerPage,
+        limit: this.pagination.rowsPerPage,
+        sortBy: 'lastModified:asc'
+      })
+      if (result && result.data && result.data.success) {
+        this.articles = result.data.data
+        this.pagination.rowsNumber = result.data.count
+      }
+    },
+    jumpWritter () {
+      this.$router.replace({name: 'writter'})
     }
     // get articles funcs
   },
@@ -117,6 +107,9 @@ export default {
         case 'tag':
           return '标签'
       }
+    },
+    maxPage () {
+      return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage)
     }
   }
 }

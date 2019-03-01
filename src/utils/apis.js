@@ -16,7 +16,6 @@ const json2url = json => {
 const fetch = (url, data, method, postHeaders, isNeedJWT = false) => {
   let options = {}
   let token = SessionStorage.get.item('token')
-  console.log(token)
   if (isNeedJWT) {
     options['headers'] = {
       jwt: token
@@ -123,7 +122,7 @@ const api = {
   },
   // 回复评论
   replyComment: (params) => {
-    return fetch(urls.replyComment, params, 'get')
+    return fetch(urls.replyComment, params, 'post')
   },
   // 发布LAD
   postLad: (params) => {
@@ -136,6 +135,10 @@ const api = {
   // 根据color查询LADS
   ladsByColor: (params) => {
     return fetch(urls.ladsByColor, params, 'get')
+  },
+  // 根据关键字查询LADS
+  ladsByText: (params) => {
+    return fetch(urls.ladsByText, params, 'get')
   },
   // 修改LADS
   changeLad: (params) => {

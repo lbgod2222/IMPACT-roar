@@ -22,7 +22,7 @@
       <router-view />
     </q-page-container>
     <!-- Place for modal or living stuff -->
-    <login-modal :show="isLoginShow" @close="closeLoginModal"/>
+    <login-modal :show="isLoginShow" @close="closeLoginModalFunc"/>
   </q-layout>
 </template>
 
@@ -84,7 +84,7 @@ export default {
   },
   created () {
     // refly the  login bus
-    this.$root.$on('callLoginModal', this.callLoginModal)
+    this.$root.$on('callLoginModal', this.callLoginModalFunc)
   },
   beforeDestroy () {
     // memory release
@@ -92,10 +92,10 @@ export default {
     this.$root.$off('callLoginModal')
   },
   mounted () {
-    this.$router.push('home')
+    this.$router.push('/home')
     this.intervalNum = setInterval(() => {
       this.getUserInfoFunc()
-    }, 10000)
+    }, 60000)
   },
   computed: {
     ...mapGetters(['IS_LOGIN'])
@@ -104,27 +104,24 @@ export default {
     ...mapActions(['getUserInfo']),
     ...mapMutations(['setLoginState', 'envalUserInfo']),
     scrollHandler (scroll) {
-      // console.log(scroll)
       if (scroll.direction === 'down' && scroll.height !== 0) {
         window.scrollTop = 9999
-        console.log(this.$refs.outer.scrollHeight)
         this.$refs.outer.scrollTop = this.$refs.outer.scrollHeight
       }
     },
-    callLoginModal () {
+    callLoginModalFunc () {
+      console.log('main alerted!')
       this.isLoginShow = true
     },
-    closeLoginModal () {
+    closeLoginModalFunc () {
       this.isLoginShow = false
     },
     async getUserInfoFunc () {
-      console.log('in the func')
       let uid = getCache('uid')
       if (uid && uid.length) {
         let result = await this.getUserInfo(uid)
         if (result && result.data.success) {
           let data = result.data.data
-          console.log('get info:', result)
           this.envalUserInfo(data)
         }
       } else {

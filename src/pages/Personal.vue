@@ -125,112 +125,7 @@ export default {
       name: '',
       age: '',
       valid: '',
-      email: '',
-      // temp fake data
-      articles: [
-        {
-          meta: {
-            tags: ['Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive', 'Rescure', 'helpAlive'],
-            votes: 0,
-            cultivated: 0
-          },
-          author: {
-            name: 'Danny', // 也许只留一个名字就好了//id？
-            username: 'danny123',
-            _id: '5be01f20eabfb92bc86f15fb'
-          },
-          lastModified: '2018-08-28T01:53:42.642Z',
-          _id: '5b84ab5d92895d4e94b9713e',
-          title: '看待新奇事物的新奇本领'
-        },
-        {
-          meta: {
-            tags: [
-              'well'
-            ],
-            votes: 0,
-            cultivated: 0
-          },
-          author: {
-            name: 'Danny', // 也许只留一个名字就好了//id？
-            _id: '5be01f20eabfb92bc86f15fb'
-          },
-          lastModified: '2018-08-25T16:30:46.166Z',
-          _id: '5b81843ac0357512107f3629',
-          title: 'The seventh article'
-        },
-        {
-          meta: {
-            tags: [
-              'hush3'
-            ],
-            votes: 0,
-            cultivated: 0
-          },
-          author: {
-            name: 'Danny', // 也许只留一个名字就好了//id？
-            _id: '5be01f20eabfb92bc86f15fb'
-          },
-          lastModified: '2018-08-22T10:35:13.164Z',
-          _id: '5b7d3c8a228b532db0c07836',
-          title: 'The seventh article'
-        }
-      ],
-      lads: [
-        {
-          content: 'With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to sayWith those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say',
-          color: 'black',
-          createdTime: new Date() - 10000000,
-          lastModified: new Date() - 9000000,
-          tempNick: '',
-          creator: {
-            'name': 'Danny', // 也许只留一个名字就好了？
-            'email': 'DannyLuvJenny@google.com',
-            'username': 'danny123',
-            'age': 18,
-            'hashed_password': 'f73dad875833944cdfe83378949bf32557de2cae',
-            'salt': '762959350905',
-            'authToken': '',
-            'articls': [],
-            'cultivated': [],
-            'comments': [],
-            'lads': [],
-            'messages': [],
-            '_id': '5be01f20eabfb92bc86f15fb',
-            '__v': 0
-          }
-        },
-        {
-          content: 'With those heart still beating \'s man, we have nothing to say',
-          color: 'black',
-          createdTime: new Date() - 10000000,
-          lastModified: new Date() - 9000000,
-          tempNick: '',
-          creator: {
-            'name': 'Danny', // 也许只留一个名字就好了？
-            'email': 'DannyLuvJenny@google.com',
-            'username': 'danny123',
-            'age': 18,
-            'hashed_password': 'f73dad875833944cdfe83378949bf32557de2cae',
-            'salt': '762959350905',
-            'authToken': '',
-            'articls': [],
-            'cultivated': [],
-            'comments': [],
-            'lads': [],
-            'messages': [],
-            '_id': '5be01f20eabfb92bc86f15fb',
-            '__v': 0
-          }
-        },
-        {
-          content: 'With those heart still beating \'s man, we have nothing to say',
-          color: 'black',
-          createdTime: new Date() - 10000000,
-          lastModified: new Date() - 9000000,
-          tempNick: 'Stunisakindofdisasterasisaid'
-        }
-      ]
+      email: ''
     }
   },
   methods: {
@@ -363,6 +258,7 @@ export default {
     .main-article
       margin-bottom 10px
       .main-article-title
+        word-break break-all
         color $secondary
         font-weight bold
         font-size times($base-font, 1.2)

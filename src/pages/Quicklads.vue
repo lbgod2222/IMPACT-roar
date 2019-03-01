@@ -1,5 +1,5 @@
 <template>
-  <q-page class='row max-height' padding>
+  <q-page class='row max-height page-commen' padding>
     <q-scroll-observable @scroll='scrollHandler' />
     <aside class='left-panel col-3 fixed text-left'>
       <div class='article-title text-secondary uppercase col-12 spec-font' :class="!largeGrid ? 'shrink' : null">
@@ -14,12 +14,12 @@
       </div>
       <div class='searchBar col-12 q-px-xs q-py-xs q-mt-xl1 mt-20' :class="!largeGrid ? 'shrink-search' : null">
         <div>
-          <q-search :hide-underline='!searchShowWrap' @focus='searchShowWrap=true' @blur='searchShowWrap=false'/>
+          <!-- <q-search :hide-underline='!searchShowWrap' v-model="researchContent" @focus='searchShowWrap=true' @blur='searchShowWrap=false' @keyup.enter="actResearch" :after="searchBtn"/> -->
         </div>
       </div>
       <div class='col-12 q-px-xs q-py-xs q-mt-xl1 mt-20' :class="!largeGrid ? 'shrink-search' : null">
         <div class='btn-group-wrap align-center'>
-          <q-btn icon='mdi-grid-large' :class="largeGrid ? ['bg-faded', 'text-white'] : null" @click='largeGrid = true' no-ripple flat></q-btn>
+          <q-btn icon='mdi-grid-large' :class="largeGrid ? ['bg-faded', 'text-white'] : null" @click='callLargeGrid' no-ripple flat></q-btn>
           <q-btn icon='mdi-grid' :class="!largeGrid ? ['bg-faded', 'text-white'] : null" @click='largeGrid = false' no-ripple flat></q-btn>
         </div>
       </div>
@@ -35,20 +35,21 @@
           </div>
           <div class='col-2 dense-detail column'>
             <div class="spec-font text-weight-bold">
-              {{item.creator ? item.creator.name : item.tempNick}}
+              {{item.creator.name}}
             </div>
             <div class="spec-font">{{purseTimestamp(item.lastModified)}}</div>
             <span class="dense-color col-12" :class="colorBox[item.color.toUpperCase()].style"></span>
           </div>
         </div>
         <div class="dense-pagi">
-          <q-pagination color="secondary" size="20px" direction-links />
+          <q-pagination color="secondary" size="16px" :max="maxPage" v-model="pagination.page" @input="changePage" direction-links />
+          <!-- <q-pagination color="secondary" size="20px" direction-links /> -->
         </div>
       </div>
       <!-- for detail use -->
       <div class="detail-box" v-else>
         <span class="spec-font detail-title text-weight-bold text-secondary">
-          {{singleLad.tempNick || singleLad.creator.name}}
+          {{singleLad.creator.name}}
         </span>
         <div class="spec-font detail-date mt-10">
           创建时间：{{purseTimestamp(singleLad.createdTime)}} -- 最后修改时间：{{purseTimestamp(singleLad.lastModified)}}
@@ -68,8 +69,8 @@
         <div class="separator"></div>
         <div class="detail-action">
           <q-btn class="spec-font text-weight-bold" no-ripple flat>采集</q-btn>
-          <q-btn class="spec-font text-weight-bold" no-ripple flat>上一个</q-btn>
-          <q-btn class="spec-font text-weight-bold" no-ripple flat>下一个</q-btn>
+          <q-btn class="spec-font text-weight-bold" @click="callDetail(-1)" no-ripple flat>上一个</q-btn>
+          <q-btn class="spec-font text-weight-bold" @click="callDetail(1)" no-ripple flat>下一个</q-btn>
         </div>
       </div>
     </div>
@@ -84,8 +85,11 @@ import {
   QSearch,
   QPagination
 } from 'quasar'
+import {
+  mapActions
+} from 'vuex'
 import { colorBox } from '../utils/constant'
-import { purseTimestamp } from '../utils/util'
+import { purseTimestamp, warnNotify } from '../utils/util'
 
 export default {
   name: 'QuickLad',
@@ -102,91 +106,32 @@ export default {
       scrolled: false,
       searchShowWrap: false,
       largeGrid: false,
+      intervalNum: -1,
+      activeIndex: -1,
+      researchContent: '',
+      pagination: {
+        page: 1,
+        rowsNumber: 0,
+        rowsPerPage: 10
+      },
       // temp data
-      lads: [
-        {
-          content: 'With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to sayWith those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say',
-          color: 'black',
-          createdTime: new Date() - 10000000,
-          lastModified: new Date() - 9000000,
-          tempNick: '',
-          creator: {
-            'name': 'Danny', // 也许只留一个名字就好了？
-            'email': 'DannyLuvJenny@google.com',
-            'username': 'danny123',
-            'age': 18,
-            'hashed_password': 'f73dad875833944cdfe83378949bf32557de2cae',
-            'salt': '762959350905',
-            'authToken': '',
-            'articls': [],
-            'cultivated': [],
-            'comments': [],
-            'lads': [],
-            'messages': [],
-            '_id': '5be01f20eabfb92bc86f15fb',
-            '__v': 0
-          }
-        },
-        {
-          content: 'With those heart still beating \'s man, we have nothing to say',
-          color: 'black',
-          createdTime: new Date() - 10000000,
-          lastModified: new Date() - 9000000,
-          tempNick: '',
-          creator: {
-            'name': 'Danny', // 也许只留一个名字就好了？
-            'email': 'DannyLuvJenny@google.com',
-            'username': 'danny123',
-            'age': 18,
-            'hashed_password': 'f73dad875833944cdfe83378949bf32557de2cae',
-            'salt': '762959350905',
-            'authToken': '',
-            'articls': [],
-            'cultivated': [],
-            'comments': [],
-            'lads': [],
-            'messages': [],
-            '_id': '5be01f20eabfb92bc86f15fb',
-            '__v': 0
-          }
-        },
-        {
-          content: 'With those heart still beating \'s man, we have nothing to say',
-          color: 'black',
-          createdTime: new Date() - 10000000,
-          lastModified: new Date() - 9000000,
-          tempNick: 'Stunisakindofdisasterasisaid'
-        }
-      ],
-      singleLad: {
-        content: 'With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to sayWith those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say, With those heart still beating \'s man, we have nothing to say',
-        color: 'black',
-        createdTime: new Date() - 10000000,
-        lastModified: new Date() - 9000000,
-        tempNick: '',
-        creator: {
-          'name': 'Danny', // 也许只留一个名字就好了？
-          'email': 'DannyLuvJenny@google.com',
-          'username': 'danny123',
-          'age': 18,
-          'hashed_password': 'f73dad875833944cdfe83378949bf32557de2cae',
-          'salt': '762959350905',
-          'authToken': '',
-          'articls': [],
-          'cultivated': [],
-          'comments': [],
-          'lads': [],
-          'messages': [],
-          '_id': '5be01f20eabfb92bc86f15fb',
-          '__v': 0
-        }
-      }
+      lads: [],
+      singleLad: {}
     }
   },
+  mounted () {
+    this.getQuicklads()
+    this.intervalNum = setInterval(() => {
+      this.getQuicklads()
+    }, 10000)
+  },
+  beforeDestroy () {
+    clearInterval(this.intervalNum)
+  },
   methods: {
+    ...mapActions(['getAllQuicklads', 'getQuickladsByText']),
     purseTimestamp,
     scrollHandler (scroll) {
-      console.log(scroll)
       if (scroll.position > 300) {
         this.scrolled = true
       } else {
@@ -195,12 +140,82 @@ export default {
     },
     checkDetail (idx) {
       this.singleLad = this.lads[idx]
+      this.activeIndex = idx
       this.largeGrid = true
+    },
+    changePage (num) {
+      this.pagination.page = num
+      this.getQuicklads()
+    },
+    callLargeGrid () {
+      if (this.lads.length > 0) {
+        this.activeIndex = 0
+        this.singleLad = this.lads[0]
+        this.largeGrid = true
+      } else {
+        warnNotify('尚未有lad记录')
+      }
+    },
+    callDetail (num) {
+      if (num > 0 && this.activeIndex < this.lads.length - 1) {
+        this.activeIndex += 1
+        this.singleLad = this.lads[this.activeIndex]
+      } else if (num < 0 && this.activeIndex > 0) {
+        this.activeIndex -= 1
+        this.singleLad = this.lads[this.activeIndex]
+      }
+    },
+    initPagi () {
+      this.pagination = {
+        page: 1,
+        rowsNumber: 0,
+        rowsPerPage: 10
+      }
+    },
+    async getQuicklads () {
+      let result = await this.getAllQuicklads({
+        offset: (this.pagination.page - 1) * this.pagination.rowsPerPage,
+        limit: this.pagination.rowsPerPage,
+        sortBy: 'createdTime:desc'
+      })
+      if (result && result.data && result.data.success) {
+        this.lads = result.data.data
+        this.pagination.rowsNumber = result.data.count
+      }
+    },
+    async callResearch () {
+      let result = await this.getQuickladsByText({
+        meta: this.researchContent,
+        offset: (this.pagination.page - 1) * this.pagination.rowsPerPage,
+        limit: this.pagination.rowsPerPage,
+        sortBy: 'createdTime:desc'
+      })
+      if (result && result.data && result.data.success) {
+        this.lads = result.data.data
+        this.pagination.rowsNumber = result.data.count
+      }
+    },
+    actResearch () {
+      console.log('activated!')
+      this.initPagi()
+      this.callResearch()
     }
   },
   computed: {
     searchWrap () {
       return this.searchShowWrap ? 'searchWrapStyle' : null
+    },
+    maxPage () {
+      return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage)
+    },
+    searchBtn () {
+      return [
+        {
+          icon: 'send',
+          content: true,
+          handler: () => this.actResearch()
+        }
+      ]
     }
   }
 }
