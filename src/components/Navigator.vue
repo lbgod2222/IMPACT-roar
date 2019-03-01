@@ -88,6 +88,7 @@ export default {
           return null
         })
       } else {
+        console.log('YES?', '/' + path)
         this.$router.push('/' + path)
       }
     }

@@ -272,6 +272,7 @@ export default {
         return null
       })
     }
+    next()
   }
 }
 </script>
