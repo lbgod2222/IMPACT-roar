@@ -86,6 +86,7 @@ export default {
         transition: all 0.4s ease
     .list-author
       margin 5px 0
+      font-size 14px
       font-weight 700
   .list-time
     padding-left 16px
