@@ -97,7 +97,7 @@ import {
   mapActions,
   mapGetters
 } from 'vuex'
-import { purseTimestamp, infoNotify, warnNotify, composeDialog } from '../utils/util'
+import { purseTimestamp, infoNotify, warnNotify, composeDialog, translateErrMsg } from '../utils/util'
 
 export default {
   name: 'ArticleDetail',
@@ -220,6 +220,7 @@ export default {
         })
         if (result && result.data && result.data.success) {
           this.commentContent = ''
+          this.getArticleCommentFunc()
           infoNotify('评论成功')
         } else {
           warnNotify('出了一些问题')
@@ -243,7 +244,10 @@ export default {
         if (result && result.data && result.data.success) {
           this.replyContent = ''
           this.needReply = -1
+          this.getArticleCommentFunc()
           infoNotify('评论成功')
+        } else if (result.data.message) {
+          translateErrMsg(result.data.message)
         } else {
           warnNotify('出了一些问题')
         }

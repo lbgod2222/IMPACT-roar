@@ -128,6 +128,18 @@ export default {
   beforeDestroy () {
     clearInterval(this.intervalNum)
   },
+  beforeRouteEnter (to, from, next) {
+    console.log('to', to)
+    if (to.params && to.params.lad) {
+      next((vm) => {
+        vm.singleLad = to.params.lad
+        vm.largeGrid = true
+        vm.activeIndex = 1
+      })
+    } else {
+      next()
+    }
+  },
   methods: {
     ...mapActions(['getAllQuicklads', 'getQuickladsByText']),
     purseTimestamp,

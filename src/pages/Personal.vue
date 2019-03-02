@@ -70,7 +70,7 @@
           <span class="spec-font main-title text-weight-bold">发布的文章</span>
           <div class="main-below row">
             <div class="main-article column justify-between col-md-6 col-sm-12" v-for="(item, idx) in userInfo.articles" :key="idx">
-              <span class="main-article-title">{{item.title || ''}}</span>
+              <span class="main-article-title" @click="toArticle(item)">{{item.title || ''}}</span>
               <span class="main-article-tail spec-font">{{purseTimestamp(item.lastModified)}}</span>
             </div>
           </div>
@@ -79,7 +79,7 @@
           <span class="spec-font main-title text-weight-bold">我的QuickLad</span>
           <div class="main-below row">
             <div class="main-article column justify-between col-md-6 col-sm-12" v-for="(item, idx) in userInfo.lads" :key="idx">
-              <span class="main-article-title">{{item.content | eclipse}}</span>
+              <span class="main-article-title" @click="toQuicklad(item)">{{item.content | eclipse}}</span>
               <span class="main-article-tail spec-font">{{purseTimestamp(item.createdTime)}}</span>
             </div>
           </div>
@@ -104,7 +104,7 @@ import {
   QBtn,
   debounce
 } from 'quasar'
-import { purseTimestamp, infoNotify, warnNotify } from '../utils/util'
+import { purseTimestamp, infoNotify, warnNotify, translateErrMsg } from '../utils/util'
 
 export default {
   name: 'Personal',
@@ -139,6 +139,12 @@ export default {
         this.tag = tag
       }, 1000)
     },
+    toArticle (article) {
+      this.$router.push('/article' + article._id)
+    },
+    toQuicklad (lad) {
+      this.$router.push({name: 'quicklad', params: {lad: lad}})
+    },
     async sendValidFunc () {
       if (this.userInfo && this.userInfo.email) {
         this.loading = true
@@ -169,7 +175,10 @@ export default {
             age: this.age
           })
           if (result && result.data && result.data.success) {
+            this.$root.$emit('callGetUserInfo')
             infoNotify('更新成功')
+          } else if (result.data.message) {
+            translateErrMsg(result.data.message)
           }
         } else {
           warnNotify('验证码不正确')
