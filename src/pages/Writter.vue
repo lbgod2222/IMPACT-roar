@@ -109,15 +109,19 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    composeDialog({
-      title: '是否放弃',
-      message: '是否放弃文章的发布？',
-      isAlert: false
-    }, () => {
+    if (this.tags.length || this.title || this.content) {
+      composeDialog({
+        title: '是否放弃',
+        message: '是否放弃文章的发布？',
+        isAlert: false
+      }, () => {
+        next()
+      }, () => {
+        return null
+      })
+    } else {
       next()
-    }, () => {
-      return null
-    })
+    }
   }
 }
 </script>

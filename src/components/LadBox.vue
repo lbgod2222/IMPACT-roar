@@ -30,22 +30,22 @@
       </div>
     </div>
     <div class="q-card-primary q-card-container row no-wrap">
-      <q-input v-if="!editing" type="textarea" class="col-12 shadow-0" readonly inverted v-model="meta.title" float-label="Type what you want" @click="editContent" :color="boxColor[meta.themeColor].background" hide-underline></q-input>
+      <q-input v-if="!editing" type="textarea" class="col-12 shadow-0" readonly inverted v-model="meta.title" float-label="写下你的灵光一现" @click="editContent" :color="boxColor[meta.themeColor].background" hide-underline></q-input>
       <q-input v-else type="textarea" class="col-12 shadow-1" inverted float-label="Type what you want" v-model="content" @blur="sendContent" :color="boxColor[meta.themeColor].background" hide-underline></q-input>
     </div>
     <q-card-actions class="hover-appear">
-      <q-btn-dropdown label="Operation" outline :color="boxColor[meta.themeColor].content">
+      <q-btn-dropdown label="操作" outline :color="boxColor[meta.themeColor].content">
         <div class="row">
           <q-list highlight dense class="lad-card col-6">
-            <q-list-header>COLOR CHANGE</q-list-header>
+            <q-list-header>改变卡片颜色</q-list-header>
             <q-item @click.native="changeTheme(option.value)" v-for="(option, idx) in colorList" :key="idx" class="cursor-pointer" v-close-overlay>
               <span :class="option.style" class="col-12"></span>
             </q-item>
           </q-list>
           <q-list highlight class="col-6">
-            <q-list-header>CARD OPS</q-list-header>
+            <q-list-header>卡片选项</q-list-header>
             <q-item @click.native="deleteLad" class="cursor-pointer">
-              <q-item-main label="DELETE" />
+              <q-item-main label="删除" />
               <q-item-side right icon="delete" />
             </q-item>
             <q-item class="cursor-pointer">

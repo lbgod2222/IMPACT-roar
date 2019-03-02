@@ -271,8 +271,9 @@ export default {
       }, () => {
         return null
       })
+    } else {
+      next()
     }
-    next()
   }
 }
 </script>
