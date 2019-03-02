@@ -85,11 +85,13 @@ export default {
   created () {
     // refly the  login bus
     this.$root.$on('callLoginModal', this.callLoginModalFunc)
+    this.$root.$on('callGetUserInfo', this.getUserInfoFunc)
   },
   beforeDestroy () {
     // memory release
     clearInterval(this.intervalNum)
     this.$root.$off('callLoginModal')
+    this.$root.$off('callGetUserInfo')
   },
   mounted () {
     this.$router.push('/home')

@@ -16,10 +16,10 @@
           <!-- NORMAL -->
           <div class="q-mt-lg" v-show="flag === 0" key="form-0">
             <q-field>
-              <q-input placeholder="USERNAME" class="text-center" v-model="loginState.username"/>
+              <q-input placeholder="用户名" class="text-center" v-model="loginState.username"/>
             </q-field>
             <q-field class="q-mt-sm">
-              <q-input type="password" placeholder="PASSWORD" v-model="loginState.password"/>
+              <q-input type="password" placeholder="密码" v-model="loginState.password"/>
             </q-field>
           </div>
           <q-btn v-show="flag === 0" :loading="loadBtn" class="full-width q-mt-lg" color="secondary" key="btn-0" @click="loginFuction">
@@ -75,7 +75,7 @@ import {
   mapMutations,
   mapActions
 } from 'vuex'
-import { setCache, infoNotify, warnNotify } from '../utils/util'
+import { setCache, infoNotify, warnNotify, translateErrMsg } from '../utils/util'
 import {
   QModal,
   QModalLayout,
@@ -126,6 +126,19 @@ export default {
   methods: {
     ...mapMutations(['setLoginState']),
     ...mapActions(['login', 'createUser', 'sendValidMail', 'validMail']),
+    initForm () {
+      this.loadBtn = false
+      this.username = ''
+      this.password = ''
+      this.password2 = ''
+      this.name = ''
+      this.email = ''
+      this.valid = ''
+      this.loginState = {
+        username: '',
+        password: ''
+      }
+    },
     change (num) {
       this.flag = -1
       setTimeout(() => {
@@ -147,7 +160,13 @@ export default {
         setCache('uid', data._id)
         this.setLoginState(true)
         this.$emit('close')
+        this.$root.$emit('callGetUserInfo')
         infoNotify('登录成功')
+      } else {
+        if (result.data.message) {
+          translateErrMsg(result.data.message)
+        }
+        translateErrMsg(result.data)
       }
     },
     async sendValidFunc () {
@@ -202,6 +221,11 @@ export default {
     //     }
     //   ]
     // }
+  },
+  watch: {
+    flag () {
+      this.initForm()
+    }
   }
 }
 </script>

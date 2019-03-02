@@ -1,5 +1,8 @@
 import moment from 'moment'
 import { Dialog, SessionStorage, Notify } from 'quasar'
+import {
+  errMap
+} from '../utils/constant'
 
 const purseTimestamp = function (t) {
   return moment(t).format('YYYY/MM/DD')
@@ -52,6 +55,20 @@ const removeCache = key => {
   return SessionStorage.remove(key)
 }
 
+// translate error
+const translateErrMsg = (input) => {
+  if (typeof input === 'string') {
+    let arr = errMap
+    // whole match
+    for (let idx = 0; idx < arr.length; idx++) {
+      if (input.indexOf(arr[idx].error) > -1) {
+        warnNotify(arr[idx].key)
+        return
+      }
+    }
+  }
+}
+
 export {
   purseTimestamp,
   composeDialog,
@@ -59,5 +76,6 @@ export {
   getCache,
   removeCache,
   infoNotify,
-  warnNotify
+  warnNotify,
+  translateErrMsg
 }
