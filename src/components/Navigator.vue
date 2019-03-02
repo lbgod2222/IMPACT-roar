@@ -82,13 +82,11 @@ export default {
           message: '进入当前页面需要登录',
           isAlert: false
         }, () => {
-          console.log('damn!')
           this.$root.$emit('callLoginModal')
         }, () => {
           return null
         })
       } else {
-        console.log('YES?', '/' + path)
         this.$router.push('/' + path)
       }
     }

@@ -112,7 +112,6 @@ export default {
       }
     },
     callLoginModalFunc () {
-      console.log('main alerted!')
       this.isLoginShow = true
     },
     closeLoginModalFunc () {

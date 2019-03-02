@@ -4,8 +4,8 @@
       <!-- <div class="head-part">
         <q-input type="text" color="secondary" placeholder="Type your title"></q-input>
       </div> -->
-      <div v-if="hasSeed" class="cultivate-part spec-font">
-        <span>" {{$route.params.content}} "</span>
+      <div v-show="hasSeed" class="cultivate-part spec-font">
+        <span>" {{seed.content}} "</span>
       </div>
       <div class="head-part">
         <q-input type="text" v-model="title" color="secondary" placeholder="请输入标题"></q-input>
@@ -55,7 +55,9 @@ export default {
     return {
       tags: [],
       title: '',
-      content: ''
+      content: '',
+      seed: {},
+      hasSeed: false
     }
   },
   mounted () {
@@ -75,7 +77,7 @@ export default {
             let now = new Date().getTime()
             return purseTimestamp(now)
           })(),
-          seed: this.$route.params.seed ? this.$route.params.seed : null
+          seed: this.hasSeed ? this.seed._id : null
         })
         if (result && result.data && result.data.success) {
           this.title = ''
@@ -103,9 +105,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['USER_INFO']),
-    hasSeed () {
-      return this.$route && this.$route.params && this.$route.params.seed
+    ...mapGetters(['USER_INFO'])
+  },
+  beforeRouteEnter (to, from, next) {
+    console.log(to, from)
+    if (to.params && to.params.seed) {
+      next((vm) => {
+        vm.hasSeed = true
+        vm.seed = to.params.seed
+      })
+    } else {
+      next()
     }
   },
   beforeRouteLeave (to, from, next) {

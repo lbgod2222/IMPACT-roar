@@ -68,7 +68,7 @@
         <span class="singleqout-end">”</span>
         <div class="separator"></div>
         <div class="detail-action">
-          <q-btn class="spec-font text-weight-bold" no-ripple flat>采集</q-btn>
+          <q-btn class="spec-font text-weight-bold" @click="callCaltivated" no-ripple flat>采集</q-btn>
           <q-btn class="spec-font text-weight-bold" @click="callDetail(-1)" no-ripple flat>上一个</q-btn>
           <q-btn class="spec-font text-weight-bold" @click="callDetail(1)" no-ripple flat>下一个</q-btn>
         </div>
@@ -86,10 +86,11 @@ import {
   QPagination
 } from 'quasar'
 import {
-  mapActions
+  mapActions,
+  mapGetters
 } from 'vuex'
 import { colorBox } from '../utils/constant'
-import { purseTimestamp, warnNotify } from '../utils/util'
+import { purseTimestamp, warnNotify, composeDialog } from '../utils/util'
 
 export default {
   name: 'QuickLad',
@@ -129,7 +130,6 @@ export default {
     clearInterval(this.intervalNum)
   },
   beforeRouteEnter (to, from, next) {
-    console.log('to', to)
     if (to.params && to.params.lad) {
       next((vm) => {
         vm.singleLad = to.params.lad
@@ -177,6 +177,24 @@ export default {
         this.singleLad = this.lads[this.activeIndex]
       }
     },
+    loginCheck () {
+      composeDialog({
+        title: '尚未登录',
+        message: '进入当前页面需要登录',
+        isAlert: false
+      }, () => {
+        this.$root.$emit('callLoginModal')
+      }, () => {
+        return null
+      })
+    },
+    callCaltivated () {
+      if (!this.IS_LOGIN) {
+        this.loginCheck()
+      } else {
+        this.$router.push({name: 'writter', params: {seed: this.singleLad}})
+      }
+    },
     initPagi () {
       this.pagination = {
         page: 1,
@@ -208,12 +226,12 @@ export default {
       }
     },
     actResearch () {
-      console.log('activated!')
       this.initPagi()
       this.callResearch()
     }
   },
   computed: {
+    ...mapGetters(['IS_LOGIN']),
     searchWrap () {
       return this.searchShowWrap ? 'searchWrapStyle' : null
     },

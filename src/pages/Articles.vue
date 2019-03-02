@@ -29,8 +29,12 @@ import {
   QTooltip
 } from 'quasar'
 import {
-  mapActions
+  mapActions,
+  mapGetters
 } from 'vuex'
+import {
+  composeDialog
+} from '../utils/util'
 import ArticleListItem from '../components/ArticleListItem'
 
 export default {
@@ -92,12 +96,28 @@ export default {
         this.pagination.rowsNumber = result.data.count
       }
     },
+    loginCheck () {
+      composeDialog({
+        title: '尚未登录',
+        message: '进入当前页面需要登录',
+        isAlert: false
+      }, () => {
+        this.$root.$emit('callLoginModal')
+      }, () => {
+        return null
+      })
+    },
     jumpWritter () {
-      this.$router.replace({name: 'writter'})
+      if (!this.IS_LOGIN) {
+        this.loginCheck()
+      } else {
+        this.$router.replace({name: 'writter'})
+      }
     }
     // get articles funcs
   },
   computed: {
+    ...mapGetters(['IS_LOGIN']),
     filterTitle () {
       switch (this.type) {
         case 'all':

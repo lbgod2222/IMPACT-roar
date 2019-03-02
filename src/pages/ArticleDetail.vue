@@ -29,9 +29,9 @@
             </div>
           </div> -->
           <div class="seed" v-if="article.seed">
-            <span>SEED INFO:</span>
+            <span>种子信息:</span>
             <br />
-            <span>{{article.seed.content}}</span>
+            <span class="break-all">{{article.seed.content}}</span>
           </div>
         </div>
       </aside>

@@ -78,7 +78,6 @@ export default {
   methods: {
     scrollHandler (scroll) {
       if (scroll.direction === 'down' && scroll.height !== 0) {
-        console.log(scroll)
         // window.scrollTop = 9999
         // this.$refs.outer.scrollTop = this.$refs.outer.scrollHeight
         if (scroll.position > 350) {
