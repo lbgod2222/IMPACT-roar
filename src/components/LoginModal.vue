@@ -166,7 +166,7 @@ export default {
         if (result.data.message) {
           translateErrMsg(result.data.message)
         }
-        translateErrMsg(result.data)
+        translateErrMsg(result.data.message)
       }
     },
     async sendValidFunc () {
@@ -184,7 +184,7 @@ export default {
       }
     },
     async registFunction () {
-      if (this.username && this.password && this.password2 & this.password2 === this.password && this.name && this.email && this.valid) {
+      if (this.username && this.password && this.password2 && this.password2 === this.password && this.name && this.email && this.valid) {
         // form complete, need to check valid
         let validResult = await this.validMail({
           authCode: this.valid,
@@ -200,11 +200,14 @@ export default {
           if (result && result.data && result.data.success) {
             infoNotify('注册成功')
             this.flag = 0
+          } else if (!result.data.success) {
+            translateErrMsg(result.data.message)
           }
         } else {
-          warnNotify('验证码不正确')
+          translateErrMsg(validResult.data.message)
         }
       } else {
+        console.log(this.username, this.password, this.password2)
         warnNotify('表格不完整')
       }
     }

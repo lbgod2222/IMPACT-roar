@@ -6,7 +6,7 @@
         {{article.title}}
       </div>
       <div class="article-subtitle text-neutral offset-md-3 spec-font">
-        最后修改时间: {{purseTimestamp(article.lastModified)}}
+        最后修改时间: {{purseTimestamp(article.lastModified)}}   {{article.author ? article.author.name : ''}}
       </div>
     </header>
     <!-- aside -->

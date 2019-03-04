@@ -1,6 +1,6 @@
 // THIS JUST FOR THE UPCOMING MUTISERVER MIND
-const server = 'http://127.0.0.1:3007'
-// const server = 'http://47.105.188.213:3007'
+// const server = 'http://127.0.0.1:3007'
+const server = 'http://47.105.188.213:3007'
 
 const urls = {
   // USER
@@ -137,6 +137,14 @@ const errMap = [
   {
     error: '5013',
     key: '邮箱验证未通过'
+  },
+  {
+    error: '5014',
+    key: '用户名重复'
+  },
+  {
+    error: '5015',
+    key: '请重新发送验证邮件'
   }
 ]
 
