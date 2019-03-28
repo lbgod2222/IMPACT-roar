@@ -1,6 +1,5 @@
 // LOAD function
 function load (component, isLayout = false) {
-  console.log('what we load:', component, isLayout)
   return isLayout ? () => import(`layouts/${component}.vue`) : () => import(`pages/${component}.vue`)
 }
 
@@ -27,6 +26,31 @@ const routes = [
         path: 'articles',
         name: 'articles',
         component: load('Articles')
+      },
+      {
+        path: 'article/:aid',
+        name: 'article',
+        component: load('ArticleDetail')
+      },
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: load('QuickDashboard')
+      },
+      {
+        path: 'personal',
+        name: 'personal',
+        component: load('Personal')
+      },
+      {
+        path: 'quicklad',
+        name: 'quicklad',
+        component: load('Quicklads')
+      },
+      {
+        path: 'writter',
+        name: 'writter',
+        component: load('Writter')
       }
     ]
   }

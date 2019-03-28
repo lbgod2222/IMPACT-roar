@@ -13,15 +13,17 @@ Vue.use(Vuex)
  * directly export the Store instantiation
  */
 
+const model = {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations
+}
+
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
-    modules: {
-      namespaced: true,
-      state,
-      getters,
-      actions,
-      mutations
-    }
+    ...model
   })
 
   return Store

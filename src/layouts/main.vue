@@ -16,9 +16,13 @@
         </div>
       </div>
     </div> -->
+    <!-- Commen widget -->
+    <navigator />
     <q-page-container>
       <router-view />
     </q-page-container>
+    <!-- Place for modal or living stuff -->
+    <login-modal :show="isLoginShow" @close="closeLoginModalFunc"/>
   </q-layout>
 </template>
 
@@ -40,6 +44,14 @@ import {
   QScrollObservable
 } from 'quasar'
 import bgVideo from '../assets/bg.mp4'
+import LoginModal from '../components/LoginModal'
+import Navigator from '../components/Navigator'
+import {
+  mapMutations,
+  mapActions,
+  mapGetters
+} from 'vuex'
+import { getCache } from '../utils/util'
 
 export default {
   name: 'Home',
@@ -47,7 +59,9 @@ export default {
     return {
       leftDrawer: true,
       visible: true,
-      bgVideo
+      bgVideo,
+      isLoginShow: false,
+      intervalNum: -1
     }
   },
   components: {
@@ -64,20 +78,65 @@ export default {
     QPageContainer,
     QPage,
     QSlideTransition,
-    QScrollObservable
+    QScrollObservable,
+    LoginModal,
+    Navigator
+  },
+  created () {
+    // refly the  login bus
+    this.$root.$on('callLoginModal', this.callLoginModalFunc)
+    this.$root.$on('callGetUserInfo', this.getUserInfoFunc)
+  },
+  beforeDestroy () {
+    // memory release
+    clearInterval(this.intervalNum)
+    this.$root.$off('callLoginModal')
+    this.$root.$off('callGetUserInfo')
   },
   mounted () {
-    this.$router.push('home')
+    this.$router.push('/home')
+    this.intervalNum = setInterval(() => {
+      this.getUserInfoFunc()
+    }, 60000)
+  },
+  computed: {
+    ...mapGetters(['IS_LOGIN'])
   },
   methods: {
+    ...mapActions(['getUserInfo']),
+    ...mapMutations(['setLoginState', 'envalUserInfo']),
     scrollHandler (scroll) {
-      // console.log(scroll)
       if (scroll.direction === 'down' && scroll.height !== 0) {
         window.scrollTop = 9999
-        console.log(this.$refs.outer.scrollHeight)
         this.$refs.outer.scrollTop = this.$refs.outer.scrollHeight
       }
+    },
+    callLoginModalFunc () {
+      this.isLoginShow = true
+    },
+    closeLoginModalFunc () {
+      this.isLoginShow = false
+    },
+    async getUserInfoFunc () {
+      let uid = getCache('uid')
+      if (uid && uid.length) {
+        let result = await this.getUserInfo(uid)
+        if (result && result.data.success) {
+          let data = result.data.data
+          this.envalUserInfo(data)
+        }
+      } else {
+        return null
+      }
     }
+  },
+  watch: {
+    // IS_LOGIN (val) {
+    //   if (val) {
+    //     console.log('val is:', val)
+    //     this.getUserInfo()
+    //   }
+    // }
   }
 }
 </script>
